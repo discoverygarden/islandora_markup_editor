@@ -56,5 +56,6 @@
         </div>
       </div>
       <div id="east_div" class="ui-layout-east"></div>
+    </div>
   </div>
 </div>
