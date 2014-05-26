@@ -159,24 +159,18 @@ function islandora_markup_editor_theme($existing, $type, $theme, $path) {
 
 /**
  * Implements hook_preproccess().
+ *
+ * When theming this from another module, set the
+ * flag '$variables['custom_js']' to TRUE, and supply
+ * your own .js init scripts via drupal_add_js in the
+ * other modules preprocess function. See
+ * islandora_critical_edition_preprocess_islandora_critical_edition()
+ * for an example implementation.
  */
 function islandora_markup_editor_preprocess_islandora_markup_editor(&$variables) {
   global $base_url;
   global $user;
 
-  // To Clarify the purpose of this preprocessor, it
-  // is the first step in abstracting a stand alone
-  // cwrc writer implementation, without assumptions
-  // on content models. This viewer has no annotations,
-  // shared canvas or header navigation controls. Its
-  // intent is to be a stand alone, base cwrc editor. Further
-  // extraction from islandora_critical_edition adds the
-  // CWRC-Writer code base as a library, implemented here,
-  // and themed where needed (such as islandora_critical_edition).
-  // In the end, this will allow us to treat CWRC-Writer as a
-  // true library, and will be easily updateable. In the future,
-  // a module could use this editor via the theme layer, and use
-  // its own startup.js to kick off any special module needs.
   module_load_include('inc', 'islandora_markup_editor', 'includes/utilities');
   module_load_include('inc', 'islandora_paged_content', 'includes/utilities');
   module_load_include('inc', 'php_lib', 'DOMHelpers');
@@ -258,8 +252,12 @@ function islandora_markup_editor_preprocess_islandora_markup_editor(&$variables)
   $dialog_path = $islandora_markup_editor_module_path . "/CWRC-Writer/src/js/dialogs";
   islandora_markup_editor_add_files_from_dir($dialog_path);
 
-  $markup_js_path = $islandora_markup_editor_module_path . "/js";
-  islandora_markup_editor_add_files_from_dir($markup_js_path);
+  // Holds our custom js per implementation.
+  $custom_js = isset($variables['custom_js']) ? $variables['custom_js'] : $islandora_markup_editor_module_path . "/js";
+  if ($custom_js != TRUE) {
+    islandora_markup_editor_add_files_from_dir($custom_js);
+  }
+
 }
 
 /**

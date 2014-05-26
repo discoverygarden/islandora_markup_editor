@@ -17,6 +17,9 @@
  */
 function islandora_markup_editor_fetch_tei_processing_instruction(AbstractObject $object, $dsid = 'OBJ') {
 
+  if (!isset($object[$dsid])) {
+    return FALSE;
+  }
   $xml_data = $object[$dsid]->content;
   $src_doc = new DOMDocument();
   $src_doc->preserveWhiteSpace = FALSE;
