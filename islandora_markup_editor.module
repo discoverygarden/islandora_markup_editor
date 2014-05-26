@@ -225,16 +225,11 @@ function islandora_markup_editor_preprocess_islandora_markup_editor(&$variables)
   drupal_add_js($islandora_markup_editor_module_path . '/js/ContextMenu/jquery.contextMenu.js');
   drupal_add_js($islandora_markup_editor_module_path . '/js/entity_search.js');
 
-
   drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/css/tei.css");
   drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/css/islandora_style.css");
 
   $markup_editor_css_path = $islandora_markup_editor_module_path . "/css";
   islandora_markup_editor_add_files_from_dir($markup_editor_css_path, "css");
-
-
-  //drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/smoothness/jquery-ui-1.9.0.custom.css");
-
 
   drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/smoothness/jquery-ui-1.10.3.custom.min.css");
   drupal_add_css($islandora_markup_editor_module_path . '/CWRC-Writer/src/js/lib/jquery/jquery.collapsiblepanel.css');
@@ -268,8 +263,6 @@ function islandora_markup_editor_preprocess_islandora_markup_editor(&$variables)
 
   $markup_js_path = $islandora_markup_editor_module_path . "/js";
   islandora_markup_editor_add_files_from_dir($markup_js_path);
-
-
 }
 
 /**
