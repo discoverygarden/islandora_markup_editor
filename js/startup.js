@@ -7,19 +7,19 @@ $(function() {
   $('#header_label_wrapper').hide();
   $('#annotation_tab').hide();
 
-  PID = Drupal.settings.islandora_critical_edition.page_pid;
+  PID = Drupal.settings.islandora_markup_editor.page_pid;
   cwrc_params = {};
   window.location.hash = '#' + PID;
   writer = null;
-  islandoraCriticalEditionsUrl = Drupal.settings.basePath +
-    Drupal.settings.islandora_critical_edition.module_base;
+  moduleUrl = Drupal.settings.basePath +
+    Drupal.settings.islandora_markup_editor.module_edit_base;
   var config = {
     delegator: islandoraBackendDelegate,
-    cwrcRootUrl: islandoraCriticalEditionsUrl + '/CWRC-Writer/src/',
-    schemas: Drupal.settings.islandora_critical_edition.schema_object['schemas']
+    cwrcRootUrl: moduleUrl + '/CWRC-Writer/src/',
+    schemas: Drupal.settings.islandora_markup_editor.schema_object['schemas']
   };
   $.ajax({
-    url: Drupal.settings.basePath + Drupal.settings.islandora_critical_edition.page_setup + PID,
+    url: Drupal.settings.basePath + Drupal.settings.islandora_markup_editor.page_setup + PID,
     timeout: 3000,
     async: false,
     dataType: 'json',
@@ -31,9 +31,8 @@ $(function() {
       writer.schemaId = "doc_default";
       writer.init();
       // Close the UIPanes.
-      writer.layout.hide("east");
-      writer.layout.toggle("west");
-      
+     // writer.layout.hide("east");
+      //writer.layout.toggle("west");
     },
     error: function() {
       console.log("Error");

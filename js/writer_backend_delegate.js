@@ -46,7 +46,7 @@ function islandoraBackendDelegate(config) {
     var docText = writer.fm.getDocumentContent(false);
     var usr_schema = writer.schemas[writer.schemaId];
     $.ajax({
-      url: Drupal.settings.islandora_critical_edition.validate_path,
+      url: Drupal.settings.islandora_markup_editor.validate_path,
       type: 'POST',
       dataType: 'XML',
       data: {
@@ -92,6 +92,10 @@ function islandoraBackendDelegate(config) {
       success: function(doc, status, xhr) {
         window.location.hash = '#' + PID;
         callback.call(writer, doc);
+        // Doing the following anywhere else may
+        // throw a ui error in console.
+        writer.layout.hide("east");
+        writer.layout.toggle("west");
       },
       error: function(xhr, status, error) {
         writer.dialogs.show('message', {

@@ -41,6 +41,27 @@ function islandora_markup_editor_fetch_tei_processing_instruction(AbstractObject
 }
 
 /**
+ *
+ * @param string $dir
+ *   The directory the files reside in.
+ * @param string $file_type
+ *   For now, ither .js or .css.
+ */
+function islandora_markup_editor_add_files_from_dir($direc, $file_type = 'js') {
+  $function = "drupal_add_" . $file_type;
+  if(!function_exists($function)) {
+    return FALSE;
+  }
+  $dir = new DirectoryIterator($direc);
+  foreach ($dir as $fileinfo) {
+    if (!$fileinfo->isDot() && $fileinfo->isFile() && ($fileinfo->getExtension() == $file_type)) {
+      $file_name = $fileinfo->getFilename();
+      $function($direc . "/$file_name");
+    }
+  }
+}
+
+/**
  * Adds schema processing instructions to a given objects requested datastream.
  *
  * @param AbstractObject $object
@@ -60,26 +81,32 @@ function islandora_markup_editor_add_tei_processing_instruction(AbstractObject $
     $schema = file_create_url("$critical_edition_module_path/CWRC-Writer/src/schema/CWRC-TEIBasic.rng");
   }
   $xml_data = $object[$dsid]->content;
-  $src_doc = new DOMDocument();
-  $src_doc->preserveWhiteSpace = FALSE;
-  $src_doc->formatOutput = TRUE;
-  @$src_doc->loadXML($xml_data);
-
   $instructions = array(
     'href' => $schema,
     'type' => 'application/xml',
     'schematypens' => 'http://relaxng.org/ns/structure/1.0',
   );
 
+  $tei_doc = new DOMDocument();
+  @$tei_doc->loadXML($xml_data);
+
+
   $processing_string = "";
   foreach ($instructions as $key => $value) {
     $processing_string .= $key . '="' . $value . '" ';
   }
-
   $trimmed = trim($processing_string);
+
+  $src_doc = new DOMDocument("1.0", "ISO-8859-15");
+  $src_doc->preserveWhiteSpace = FALSE;
+  $src_doc->formatOutput = TRUE;
   $rng_schema = $src_doc->createProcessingInstruction('xml-model', $trimmed);
   $src_doc->appendChild($rng_schema);
-  $object['OBJ']->setContentFromString($src_doc->saveXML());
+  $node = $tei_doc->getElementsByTagName('TEI')->item(0);
+  $tei_data = $src_doc->importNode($node, TRUE);
+  $src_doc->appendChild($tei_data);
+  $data = $src_doc->saveXML();
+  $object['OBJ']->setContentFromString($data);
 
   return $trimmed;
 }
