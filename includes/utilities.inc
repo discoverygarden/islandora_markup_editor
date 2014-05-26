@@ -41,15 +41,16 @@ function islandora_markup_editor_fetch_tei_processing_instruction(AbstractObject
 }
 
 /**
+ * Load js/css files in a given directory for the cwrc editor.
  *
- * @param string $dir
+ * @param string $direc
  *   The directory the files reside in.
  * @param string $file_type
  *   For now, ither .js or .css.
  */
 function islandora_markup_editor_add_files_from_dir($direc, $file_type = 'js') {
   $function = "drupal_add_" . $file_type;
-  if(!function_exists($function)) {
+  if (!function_exists($function)) {
     return FALSE;
   }
   $dir = new DirectoryIterator($direc);
@@ -89,7 +90,6 @@ function islandora_markup_editor_add_tei_processing_instruction(AbstractObject $
 
   $tei_doc = new DOMDocument();
   @$tei_doc->loadXML($xml_data);
-
 
   $processing_string = "";
   foreach ($instructions as $key => $value) {

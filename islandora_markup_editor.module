@@ -208,7 +208,7 @@ function islandora_markup_editor_preprocess_islandora_markup_editor(&$variables)
   drupal_add_js(array('islandora_markup_editor' => array('page_pid' => $variables['islandora_object']->id)), 'setting');
   drupal_add_js(array('islandora_markup_editor' => array('validate_path' => $validate_path)), 'setting');
 
-  // Must be added in a paticular order, figure out how to add weights to the util function.
+  // Must be added in a paticular order.
   drupal_add_js($islandora_markup_editor_module_path . '/CWRC-Writer/src/js/lib/jquery/jquery-1.8.3.js');
   drupal_add_js($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/jquery/jquery-ui-1.9.0.custom.min.js");
   drupal_add_js($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/jquery/jquery.layout-latest.min.js");
@@ -235,7 +235,7 @@ function islandora_markup_editor_preprocess_islandora_markup_editor(&$variables)
   drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/snippet/jquery.snippet.css");
   drupal_add_css($islandora_markup_editor_module_path . '/js/ContextMenu/jquery.contextMenu.css');
 
-  // Need to be added in a paticular order, so cant use the util function to add them.
+  // Need to be added in a paticular order.
   drupal_add_js($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/tinymce/tiny_mce_src.js");
   drupal_add_js($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/tinymce/jquery.tinymce.js");
   drupal_add_js($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/tinymce/copy_event.js");
