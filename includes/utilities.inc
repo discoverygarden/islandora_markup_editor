@@ -20,7 +20,36 @@ function islandora_markup_editor_fetch_tei_processing_instruction(AbstractObject
   if (!isset($object[$dsid])) {
     return FALSE;
   }
-  $xml_data = $object[$dsid]->content;
+
+  $result = islandora_markup_editor_query_for_processing_instruction($object[$dsid]->content);
+
+  if (!$result->item(0)) {
+    // No processing instruction, add the default.
+    islandora_markup_editor_add_tei_processing_instruction($object, "", $dsid);
+    $result = islandora_markup_editor_query_for_processing_instruction($object[$dsid]->content);
+  }
+
+  // Format the output for convience.
+  $arr = explode(" ", $result->item(0)->data);
+  $return = array();
+  foreach ($arr as $key => $value) {
+    $split_arr = explode("=", $value);
+    $return[$split_arr[0]] = str_replace('"', '', $split_arr[1]);
+  }
+  return $return;
+}
+
+/**
+ * Query a FedoraObjects datastream for an xml processor instruction.
+ *
+ * @param string $xml
+ *   The xml string to query for processing instruction.
+ *
+ * @return string
+ *   The processing instruction as a string.
+ */
+function islandora_markup_editor_query_for_processing_instruction($xml) {
+  $xml_data = $xml;
   $src_doc = new DOMDocument();
   $src_doc->preserveWhiteSpace = FALSE;
   $src_doc->formatOutput = TRUE;
@@ -28,19 +57,7 @@ function islandora_markup_editor_fetch_tei_processing_instruction(AbstractObject
 
   $xpath = new DOMXPath($src_doc);
   $e = $xpath->query('//processing-instruction(\'xml-model\')');
-
-  if (!$e->item(0)) {
-    return FALSE;
-  }
-
-  // Format the output for convience.
-  $arr = explode(" ", $e->item(0)->data);
-  $return = array();
-  foreach ($arr as $key => $value) {
-    $split_arr = explode("=", $value);
-    $return[$split_arr[0]] = str_replace('"', '', $split_arr[1]);
-  }
-  return $return;
+  return $e;
 }
 
 /**
@@ -80,9 +97,9 @@ function islandora_markup_editor_add_files_from_dir($direc, $file_type = 'js') {
  */
 function islandora_markup_editor_add_tei_processing_instruction(AbstractObject $object, $schema, $dsid = 'OBJ') {
   if ($schema == "") {
-    $critical_edition_module_path = drupal_get_path('module', 'islandora_critical_edition');
+    $markup_editor_module_path = drupal_get_path('module', 'islandora_markup_editor');
     // Use the CWRC-TEIBasic.rng provided with the cwrc-writer by default.
-    $schema = file_create_url("$critical_edition_module_path/CWRC-Writer/src/schema/CWRC-TEIBasic.rng");
+    $schema = file_create_url("$markup_editor_module_path/CWRC-Writer/src/schema/CWRC-TEIBasic.rng");
   }
   $xml_data = $object[$dsid]->content;
   $instructions = array(
