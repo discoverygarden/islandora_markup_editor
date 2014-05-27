@@ -126,7 +126,7 @@ function islandora_markup_editor_add_tei_processing_instruction(AbstractObject $
   $tei_data = $src_doc->importNode($node, TRUE);
   $src_doc->appendChild($tei_data);
   $data = $src_doc->saveXML();
-  $object['OBJ']->setContentFromString($data);
+  $object[$dsid]->setContentFromString($data);
 
   return $trimmed;
 }
