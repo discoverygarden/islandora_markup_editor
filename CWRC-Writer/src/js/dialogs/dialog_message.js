@@ -55,12 +55,12 @@ var MessageDialog = function(config) {
 			message.dialog('option', 'title', title);
 			message.dialog('option', 'buttons', {
 				'Yes': function() {
-					message.dialog('close');
 					callback(true);
+					message.dialog('close');
 				},
 				'No': function() {
-					message.dialog('close');
 					callback(false);
+					message.dialog('close');
 				}
 			});
 			$('#messageDialog > p > span[class=message]').html(msg);

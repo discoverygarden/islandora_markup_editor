@@ -5,15 +5,7 @@ var EntitiesModel = function() {
 		person: {
 			title: 'Person',
 			mapping: {
-				tei: ''+
-				'<person cert="${info.certainty}"'+
-				'{{if info.gender}}'+
-					' sex="${info.gender}"'+
-				'{{/if}}'+
-				'{{if info.role}}'+
-					' role="${info.role}"'+
-				'{{/if}}'+
-				'><persName>[[[editorText]]]</persName></person>',
+				tei: '<person cert="${info.certainty}">[[[editorText]]]</person>',
 				events: '<NAME>[[[editorText]]]</NAME>'
 			}
 		},

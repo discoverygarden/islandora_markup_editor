@@ -381,7 +381,7 @@ function Utilities(config) {
 	 * @param type The type of child to search for (element or attribute)
 	 * @param children The children to return
 	 */
-	function _getChildrenXML(currEl, defHits, level, type, children) {
+	function _getChildren(currEl, defHits, level, type, children) {
 		// first get the direct types
 		currEl.find(type).each(function(index, el) {
 			var child = $(el);
@@ -462,11 +462,6 @@ function Utilities(config) {
 				docs = docs['#text'];
 			} else {
 				docs = 'No documentation available.';
-			}
-			
-			if (child.anyName) {
-				children.push('anyName');
-				return;
 			}
 			
 			var childObj = {
@@ -588,22 +583,6 @@ function Utilities(config) {
 			var defHits = {};
 			var level = 0;
 			_getChildrenJSON(element, defHits, level, config.type, children);
-			
-			if (children.indexOf('anyName') != -1) {
-				children = [];
-				// anyName means include all elements
-				for (var i = 0; i < w.schema.elements.length; i++) {
-					var el = w.schema.elements[i];
-					children.push({
-						name: el
-					});
-				}
-			}
-			
-			// get from XML, slower
-//			var element = $('element[name="'+config.tag+'"]', writer.schemaXML);
-//			_getChildrenXML(element, defHits, level, config.type, children);
-			
 			children.sort(function(a, b) {
 				if (a.name > b.name) return 1;
 				if (a.name < b.name) return -1;

@@ -7,7 +7,7 @@ var SearchWidget = function(config) {
 	
 	parent.append(''+
 	'<div id="'+parentId+'_searchBox" style="height: 31px;">'+
-	    '<label for="'+parentId+'_search_query">SearchEE</label>'+
+	    '<label for="'+parentId+'_search_query">Search</label>'+
 	    '<input type="text" name="query" id="'+parentId+'_search_query" />'+
     '</div>'+
     '<div style="height: '+(parent.height()-70)+'px;">'+
@@ -32,7 +32,6 @@ var SearchWidget = function(config) {
 	accordionParent.accordion({
 		header: 'div > h3',
 		heightStyle: 'fill',
-		active: 1,
 		activate: function(event, ui) {
 			doQuery();
 		}

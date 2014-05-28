@@ -71,7 +71,6 @@
 				
 				var baseUrl = window.location.protocol+'//'+window.location.host;
 				var config = {
-					containerId: 'cwrc_wrapper',
 					delegator: Delegator,
 					cwrcRootUrl: baseUrl+'/editor/test/',
 					schemas: {
@@ -107,27 +106,27 @@
 						writer.init();
 					},
 					error: function() {
-						config.cwrcRootUrl = baseUrl+'/cwrc/src/';
+						config.cwrcRootUrl = baseUrl+'/cwrc/';
 						config.schemas = {
 							tei: {
 								name: 'CWRC Basic TEI Schema',
-								url: baseUrl+'/cwrc/src/schema/CWRC-TEIBasic.rng',
-								cssUrl: baseUrl+'/cwrc/src/css/tei_converted.css'
+								url: baseUrl+'/cwrc/schema/CWRC-TEIBasic.rng',
+								cssUrl: baseUrl+'/cwrc/css/tei_converted.css'
 							},
 							events: {
 								name: 'Events Schema',
-								url: baseUrl+'/cwrc/src/schema/events.rng',
-								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
+								url: baseUrl+'/cwrc/schema/events.rng',
+								cssUrl: baseUrl+'/cwrc/css/orlando_converted.css'
 							},
 							biography: {
 								name: 'Biography Schema',
-								url: baseUrl+'/cwrc/src/schema/biography.rng',
-								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
+								url: baseUrl+'/cwrc/schema/biography.rng',
+								cssUrl: baseUrl+'/cwrc/css/orlando_converted.css'
 							},
 							writing: {
 								name: 'Writing Schema',
-								url: baseUrl+'/cwrc/src/schema/writing.rng',
-								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
+								url: baseUrl+'/cwrc/schema/writing.rng',
+								cssUrl: baseUrl+'/cwrc/css/orlando_converted.css'
 							}
 						};
 						writer = new Writer(config);
@@ -138,41 +137,39 @@
 		</script>
 	</head>
 <body>
-<div id="cwrc_wrapper">
-	<div id="cwrc_header" class="cwrc ui-layout-north">
-		<h1>CWRCWriter v0.6</h1>
-		<div id="headerButtons">
+<div id="cwrc_header" class="cwrc ui-layout-north">
+	<h1>CWRCWriter v0.6</h1>
+	<div id="headerButtons">
+	</div>
+</div>
+<div class="cwrc ui-layout-west">
+	<div id="westTabs" class="tabs">
+		<ul>
+			<li><a href="#entities">Entities</a></li>
+			<li><a href="#structure">Structure</a></li>
+			<li><a href="#relations">Relations</a></li>
+			<!-- li id="annotation_tab"><a href="#image-annotations">Image Annotations</a></li -->
+		</ul>
+		<div id="westTabsContent" class="ui-layout-content">
+			<!-- div id="image-annotations">
+				<div id="comment_annos_block"></div>
+			</div -->
 		</div>
 	</div>
-	<div class="cwrc ui-layout-west">
-		<div id="westTabs" class="tabs">
+</div>
+<div id="cwrc_main" class="ui-layout-center">
+	<div class="ui-layout-center">
+		<form method="post" action="">
+			<textarea id="editor" name="editor" class="tinymce"></textarea>
+		</form>
+	</div>
+	<div class="cwrc ui-layout-south">
+		<div id="southTabs" class="tabs">
 			<ul>
-				<li><a href="#entities">Entities</a></li>
-				<li><a href="#structure">Structure</a></li>
-				<li><a href="#relations">Relations</a></li>
-				<!-- li id="annotation_tab"><a href="#image-annotations">Image Annotations</a></li -->
+				<li><a href="#validation">Validation</a></li>
+				<li><a href="#selection">Selection</a></li>
 			</ul>
-			<div id="westTabsContent" class="ui-layout-content">
-				<!-- div id="image-annotations">
-					<div id="comment_annos_block"></div>
-				</div -->
-			</div>
-		</div>
-	</div>
-	<div id="cwrc_main" class="ui-layout-center">
-		<div class="ui-layout-center">
-			<form method="post" action="">
-				<textarea id="editor" name="editor" class="tinymce"></textarea>
-			</form>
-		</div>
-		<div class="cwrc ui-layout-south">
-			<div id="southTabs" class="tabs">
-				<ul>
-					<li><a href="#validation">Validation</a></li>
-					<li><a href="#selection">Selection</a></li>
-				</ul>
-				<div id="southTabsContent" class="ui-layout-content"></div>
-			</div>
+			<div id="southTabsContent" class="ui-layout-content"></div>
 		</div>
 	</div>
 </div>

@@ -47,12 +47,6 @@ A:hover
   margin: 0px 0px 0px 20px;
 }
 
-#headerButtons > div {
-    float: right;
-    cursor: pointer;
-    margin-left: 20px;
-}
-
 #cwrc_header .header-nav a
 {
   float: left;
@@ -114,6 +108,7 @@ A:hover
 #footer
 {
   border-top: 1px solid #000000;
+/*   background: url('../imgs/emic-logo') 20px 7px no-repeat transparent; */
 }
 
 #footer p

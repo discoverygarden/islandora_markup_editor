@@ -40,26 +40,14 @@ function Delegator(config) {
 				}
 			});
 		} else if (lookupService == 'viaf') {
-			var queryPrefix = '';
+			var queryPrefix = 'local.';
 			var querySuffix = '"';
 			var specificQuery = '';
 			if (type) {
-				switch (type) {
-					case 'person':
-						queryPrefix += 'local.personalNames+all+"';
-						break;
-					case 'place':
-						queryPrefix += 'local.geographicNames+all+"';
-						break;
-					case 'org':
-						queryPrefix += 'local.corporateNames+all+"';
-						break;
-					default:
-						queryPrefix += 'cql.any+all+"';
+				if (type == 'person') {
+					queryPrefix += 'personalNames+all+"';
 				}
 				specificQuery = queryPrefix + encodeURIComponent(query) + querySuffix;
-			} else {
-				specificQuery = encodeURIComponent(query);
 			}
 			$.ajax({
 				url: w.baseUrl+'services/viaf/search',
@@ -229,7 +217,8 @@ function Delegator(config) {
 	 * Editor based event system.
 	 * @param name: The name of the editor event. Possible values
 	 *   are highlightEntity_looseFocus,
-	 *       highlightEntity_gainFocus
+	 *       highlightEntity_gainFocus,
+	 *       editor_settingsChanged
 	 * @param data: Editor data associated with the event.
 	 */
 	del.editorCallback = function(name,data) {
@@ -243,6 +232,8 @@ function Delegator(config) {
 				if($(data).hasClass('place')) {
 					
 				}
+				break;
+			case 'editor_settingsChanged' :
 				break;
 			}
 	};

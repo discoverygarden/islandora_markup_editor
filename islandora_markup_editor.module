@@ -203,6 +203,9 @@ function islandora_markup_editor_preprocess_islandora_markup_editor(&$variables)
   drupal_add_js(array('islandora_markup_editor' => array('page_pid' => $variables['islandora_object']->id)), 'setting');
   drupal_add_js(array('islandora_markup_editor' => array('validate_path' => $validate_path)), 'setting');
 
+  // Fix to support legacy cwrc-writer. (Old Dialogs used this)
+  drupal_add_js(array('islandora_critical_edition' => array('module_edit_base' => $islandora_markup_editor_module_path)), 'setting');
+  drupal_add_js(array('islandora_critical_edition' => array('module_base' => $islandora_markup_editor_module_path)), 'setting');
   // Must be added in a paticular order.
   drupal_add_js($islandora_markup_editor_module_path . '/CWRC-Writer/src/js/lib/jquery/jquery-1.8.3.js');
   drupal_add_js($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/jquery/jquery-ui-1.9.0.custom.min.js");

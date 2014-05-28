@@ -1,6 +1,5 @@
 // add event listeners to all of our jquery ui dialogs
 // wrapping our dialogs in the cwrc css scope
-
 $.extend($.ui.dialog.prototype.options, {
 	create: function(event) {
 		$(event.target).on('dialogopen', function(event) {
@@ -32,11 +31,11 @@ function DialogManager(config) {
 		addorg: new AddOrganizationDialog(config),
 		triple: new TripleDialog(config),
 		header: new HeaderDialog(config),
-		filemanager: new FileManagerDialogs(config),
-		person: new PersonDialog(config)
+		filemanager: new FileManagerDialogs(config)
+//		,person: new PersonDialog(config)
 	};
 	
-//	dialogs.person = dialogs.search;
+	dialogs.person = dialogs.search;
 	dialogs.place = dialogs.search;
 	dialogs.event = dialogs.search;
 	dialogs.org = dialogs.search;

@@ -2,7 +2,6 @@ function Writer(config) {
 	config = config || {};
 	
 	var w = this;
-	
 	w.layout = null; // jquery ui layout object
 	w.editor = null; // reference to the tinyMCE instance we're creating, set in setup
 	w.entities = {}; // entities store
@@ -28,9 +27,7 @@ function Writer(config) {
 	w.schemaJSON = null; // a json version of the schema
 	w.schema = {elements: []}; // stores a list of all the elements of the loaded schema
 	
-	w.project = config.project || {}; // the current project (cwrc or russell)
-	
-	w.containerId = config.containerId; // the id of the element to initialize cwrcwriter in
+	w.project = config.project; // the current project (cwrc or russell)
 	
 	w.baseUrl = window.location.protocol+'//'+window.location.host+'/'; // the url for referencing various external services
 	w.cwrcRootUrl = config.cwrcRootUrl; // the url which points to the root of the cwrcwriter location
@@ -621,27 +618,34 @@ function Writer(config) {
 				slidable: false,
 				maskIframesOnResize: true,
 			},
-//			east: {
-//				onresize: function() {
-//					// TODO: Move this out of the editor somehow.
-//					// Accessing 'writer.layout.east.onresize does no
-//					// work.
-//					resizeCanvas();
-//				},
-//			},
+			east: {
+				maskIframesOnResize: true,
+				resizable: true,
+				slidable: false,
+				maskIframesOnResize: true,
+				onresize: function() {
+					// TODO: Move this out of the editor somehow.
+					// Accessing 'writer.layout.east.onresize does no
+					// work.
+					resizeCanvas();
+				},
+			},
 			north: {
 				size: 35,
 				minSize: 35,
-				maxSize: 60
+				maxSize: 60,
+				resizable: true,
 			},
 			south: {
 				size: 34,
+				resizable: true,
 				spacing_open: 0,
 				spacing_closed: 0
 			},
 			west: {
 				size: 'auto',
 				minSize: 325,
+				resizable: true,
 				onresize: function(region, pane, state, options) {
 					var tabsHeight = $('#westTabs > ul').outerHeight();
 					$('#westTabsContent').height(state.layoutHeight - tabsHeight);
@@ -733,15 +737,13 @@ function Writer(config) {
 			}
 		});
 		
-		if (window.location.hostname != 'localhost') {
-			window.addEventListener('beforeunload', function(e) {
-				if (tinymce.get('editor').isDirty()) {
-					var msg = 'You have unsaved changes.';
-					(e || window.event).returnValue = msg;
-					return msg;
-				}
-			});
-		}
+		window.addEventListener('beforeunload', function(e) {
+			if (tinymce.get('editor').isDirty()) {
+				var msg = 'You have unsaved changes.';
+				(e || window.event).returnValue = msg;
+				return msg;
+			}
+		});
 		
 		$(window).unload(function(e) {
 			// clear the editor first (large docs can cause the browser to freeze)
@@ -757,10 +759,9 @@ function Writer(config) {
 			mode: 'exact',
 			elements: 'editor',
 			theme: 'advanced',
-			content_css: w.cwrcRootUrl+'css/editor.css',
-			
+			// Updated from default pull.
+			content_css: config.cwrcRootUrl+'css/editor.css',
 			width: '100%',
-			
 			contextmenu_never_use_native: true,
 			
 			doctype: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
@@ -833,8 +834,7 @@ function Writer(config) {
 						if (type) {
 							if (type === 1) {
 								var tag = node.getAttribute('_tag') || node.nodeName;
-//								return true;
-								return !!(ed.schema.getBlockElements()[tag]);
+								return true;
 							}
 						}
 
