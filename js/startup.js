@@ -11,37 +11,49 @@ var dsid = "OBJ";
 			var uiHeight = $('#'+writer.editor.id+'_tbl tr.mceFirst').outerHeight() + 2;
 			writer.editor.theme.resizeTo($(window).width(), $(window).height() - uiHeight);
 		}
+	  PID = Drupal.settings.islandora_markup_editor.page_pid;
+	  cwrc_params = {};
+	  window.location.hash = '#' + PID;
+	  writer = null;
+	  moduleUrl = Drupal.settings.basePath +
+	    Drupal.settings.islandora_markup_editor.module_edit_base;
+	  var config = {
+	    delegator: Delegator,//islandoraBackendDelegate,
+	    cwrcRootUrl: moduleUrl + '/js/CWRC-Writer/src/',
+	    buttons1: 'schematags,removeTag,|,addperson,addplace,|,viewsource',
+	    schemas: Drupal.settings.islandora_markup_editor.schema_object['schemas']
+	  };
 		
-		var baseUrl = window.location.protocol+'//'+window.location.host;
-		console.log(baseUrl);
-		var config = {
-			id: 'editor',
-			delegator: Delegator,
-			cwrcRootUrl: baseUrl+'/editor/test/',
-			buttons1: 'schematags,removeTag,|,addperson,addplace,|,viewsource',
-			schemas: {
-				tei: {
-					name: 'CWRC Basic TEI Schema',
-					url: baseUrl+'/schema/CWRC-TEIBasic.rng',
-					cssUrl: baseUrl+'/editor/test/css/tei_converted.css'
-				},
-				events: {
-					name: 'Events Schema',
-					url: baseUrl+'/schema/events.rng',
-					cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
-				},
-				biography: {
-					name: 'Biography Schema',
-					url: baseUrl+'/schema/biography.rng',
-					cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
-				},
-				writing: {
-					name: 'Writing Schema',
-					url: baseUrl+'/schema/writing.rng',
-					cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
-				}
-			}
-		};
+//		var baseUrl = window.location.protocol+'//'+window.location.host;
+//		console.log(baseUrl);
+//		var config = {
+//			id: 'editor',
+//			delegator: Delegator,
+//			cwrcRootUrl: baseUrl+'/editor/test/',
+//			buttons1: 'schematags,removeTag,|,addperson,addplace,|,viewsource',
+//			schemas: {
+//				tei: {
+//					name: 'CWRC Basic TEI Schema',
+//					url: baseUrl+'/schema/CWRC-TEIBasic.rng',
+//					cssUrl: baseUrl+'/editor/test/css/tei_converted.css'
+//				},
+//				events: {
+//					name: 'Events Schema',
+//					url: baseUrl+'/schema/events.rng',
+//					cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+//				},
+//				biography: {
+//					name: 'Biography Schema',
+//					url: baseUrl+'/schema/biography.rng',
+//					cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+//				},
+//				writing: {
+//					name: 'Writing Schema',
+//					url: baseUrl+'/schema/writing.rng',
+//					cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+//				}
+//			}
+//		};
 		
 		$.ajax({
 			url: 'http://apps.testing.cwrc.ca/editor/documents/info/projectname',

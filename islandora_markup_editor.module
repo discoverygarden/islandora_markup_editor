@@ -229,17 +229,17 @@ function islandora_markup_editor_preprocess_islandora_markup_editor(&$variables)
     islandora_markup_editor_add_files_from_dir($custom_js);
   }
 
-  drupal_add_js($islandora_markup_editor_module_path . '/js/CWRC-Writer/src/js/config.js');
-  drupal_add_js($islandora_markup_editor_module_path . '/js/CWRC-Writer/src/js/lib/require/require.js');
+  drupal_add_js($islandora_markup_editor_module_path . '/CWRC-Writer/src/js/config.js');
+  drupal_add_js($islandora_markup_editor_module_path . '/CWRC-Writer/src/js/lib/require/require.js');
 
-  drupal_add_css($islandora_markup_editor_module_path . "/js/CWRC-Writer/src/css/style.css");
-  drupal_add_css($islandora_markup_editor_module_path . "/js/CWRC-Writer/src/css/islandora_style.css");
-  drupal_add_css($islandora_markup_editor_module_path . "/js/CWRC-Writer/src/css/layout-default-latest.css");
-  drupal_add_css($islandora_markup_editor_module_path . "/js/CWRC-Writer/src/js/lib/snippet/jquery.snippet.css");
-  drupal_add_css($islandora_markup_editor_module_path . "/js/CWRC-Writer/src/smoothness/jquery-ui-1.10.4.custom.css");
-  drupal_add_css($islandora_markup_editor_module_path . "/js/CWRC-Writer/src/js/lib/bootstrap/bootstrap.css");
-  drupal_add_css($islandora_markup_editor_module_path . "/js/CWRC-Writer/src/js/cwrcDialogs/css/datepicker.css");
-  drupal_add_css($islandora_markup_editor_module_path . "/js/CWRC-Writer/src/js/cwrcDialogs/css/cD.css");
+  drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/css/style.css");
+  drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/css/islandora_style.css");
+  drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/css/layout-default-latest.css");
+  drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/snippet/jquery.snippet.css");
+  drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/smoothness/jquery-ui-1.10.4.custom.css");
+  drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/bootstrap/bootstrap.css");
+  drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/cwrcDialogs/css/datepicker.css");
+  drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/cwrcDialogs/css/cD.css");
   // Must be added in a paticular order.
   //drupal_add_js($islandora_markup_editor_module_path . '/CWRC-Writer/src/js/lib/jquery/jquery-1.8.3.js');
 //   drupal_add_js($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/jquery/jquery-1.9.1.js");
