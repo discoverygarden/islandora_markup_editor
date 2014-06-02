@@ -210,17 +210,6 @@ function islandora_markup_editor_preprocess_islandora_markup_editor(&$variables)
   drupal_add_js(array('islandora_critical_edition' => array('module_edit_base' => $islandora_markup_editor_module_path)), 'setting');
   drupal_add_js(array('islandora_critical_edition' => array('module_base' => $islandora_markup_editor_module_path)), 'setting');
 
-// <link type="text/css" rel="stylesheet" href="css/style.css" />
-// 		<link type="text/css" rel="stylesheet" href="css/islandora_style.css" />
-
-// 		<link type="text/css" rel="stylesheet" href="smoothness/jquery-ui-1.10.4.custom.css" />
-// 		<link type="text/css" rel="stylesheet" href="css/layout-default-latest.css" />
-// 		<link type="text/css" rel="stylesheet" href="js/lib/snippet/jquery.snippet.css" />
-
-// 		<link type="text/css" rel="stylesheet" href="js/lib/bootstrap/bootstrap.css" />
-// 		<link type="text/css" rel="stylesheet" href="js/cwrcDialogs/css/datepicker.css" />
-// 		<link type="text/css" rel="stylesheet" href="js/cwrcDialogs/css/cD.css" />
-
 
   drupal_add_js($islandora_markup_editor_module_path . '/CWRC-Writer/src/js/config.js');
   drupal_add_js($islandora_markup_editor_module_path . '/CWRC-Writer/src/js/lib/require/require.js');
@@ -244,63 +233,6 @@ function islandora_markup_editor_preprocess_islandora_markup_editor(&$variables)
   if ($custom_js !== TRUE) {
     islandora_markup_editor_add_files_from_dir($custom_js);
   }
-  // Must be added in a paticular order.
-  //drupal_add_js($islandora_markup_editor_module_path . '/CWRC-Writer/src/js/lib/jquery/jquery-1.8.3.js');
-//   drupal_add_js($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/jquery/jquery-1.9.1.js");
-//   drupal_add_js($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/jquery/jquery.layout-latest.min.js");
-//   drupal_add_js($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/jquery/jquery.layout.resizeTabLayout-1.3.js");
-//   drupal_add_js($islandora_markup_editor_module_path . '/CWRC-Writer/src/js/lib/jquery/jquery.collapsiblepanel.js');
-//   drupal_add_js($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/jquery/jquery.tmpl.min.js");
-//   drupal_add_js($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/jquery/jquery.watermark.min.js");
-
-//   drupal_add_js($islandora_markup_editor_module_path . "/js/writer_backend_delegate.js");
-//   drupal_add_js($islandora_markup_editor_module_path . '/js/jquery/jquery.watermark.min.js');
-//   drupal_add_js($islandora_markup_editor_module_path . '/js/ContextMenu/jquery.contextMenu.js');
-//   drupal_add_js($islandora_markup_editor_module_path . '/js/entity_search.js');
-
-//   drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/css/tei.css");
-//   drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/css/islandora_style.css");
-
-//   $markup_editor_css_path = $islandora_markup_editor_module_path . "/css";
-//   islandora_markup_editor_add_files_from_dir($markup_editor_css_path, "css");
-
-//   drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/smoothness/jquery-ui-1.10.3.custom.min.css");
-//   drupal_add_css($islandora_markup_editor_module_path . '/CWRC-Writer/src/js/lib/jquery/jquery.collapsiblepanel.css');
-//   drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/css/tei.css");
-//   drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/css/layout-default-latest.css");
-//   drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/snippet/jquery.snippet.css");
-//   drupal_add_css($islandora_markup_editor_module_path . '/js/ContextMenu/jquery.contextMenu.css');
-
-  // Need to be added in a paticular order.
-//   drupal_add_js($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/tinymce/tiny_mce_src.js");
-//   drupal_add_js($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/tinymce/jquery.tinymce.js");
-//   drupal_add_js($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/tinymce/copy_event.js");
-//   drupal_add_js($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib/tinymce/jquery.tinymce.js");
-
-//   $cwrc_lib = $islandora_markup_editor_module_path . "/CWRC-Writer/src/js/lib";
-//   $library_directorys = array(
-//     "$cwrc_lib/snippet",
-//     "$cwrc_lib/jstree",
-//     "$cwrc_lib/moment",
-//     "$cwrc_lib/objtree",
-//   );
-//   foreach ($library_directorys as $item_path) {
-//     islandora_markup_editor_add_files_from_dir($item_path);
-//   }
-
-//   $cwrcwriter_js_path = $islandora_markup_editor_module_path . "/CWRC-Writer/src/js";
-//   islandora_markup_editor_add_files_from_dir($cwrcwriter_js_path);
-
-//   $dialog_path = $islandora_markup_editor_module_path . "/CWRC-Writer/src/js/dialogs";
-//   islandora_markup_editor_add_files_from_dir($dialog_path);
-
-  // Holds our custom js per implementation.
-//   $custom_js = isset($variables['custom_js']) ? $variables['custom_js'] : $islandora_markup_editor_module_path . "/js";
-
-//   if ($custom_js !== TRUE) {
-//     islandora_markup_editor_add_files_from_dir($custom_js);
-//   }
-
 }
 
 /**

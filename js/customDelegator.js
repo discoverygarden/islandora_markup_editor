@@ -1,6 +1,4 @@
-define(['jquery'], function($) {
-	
-return function(writer) {
+var CustomDelegator = function(writer) {
 	var w = writer;
 	
 	var del = {};
@@ -211,7 +209,7 @@ return function(writer) {
 		var schemaUrl = w.schemaManager.schemas[w.schemaManager.schemaId].url;
 		
 		$.ajax({
-			url: w.baseUrl+'services/validator/validate.html',
+			url: Drupal.settings.islandora_markup_editor.validate_path,//w.baseUrl+'services/validator/validate.html',
 			type: 'POST',
 			dataType: 'xml',
 			data: {
@@ -248,11 +246,15 @@ return function(writer) {
 	 */
 	del.loadDocument = function(callback) {
 		$.ajax({
-			url: w.baseUrl+'editor/documents/'+w.currentDocId,
+			url: Drupal.settings.basePath + 'islandora/object/' + PID + '/datastream/' + dsid + '/view',//w.baseUrl+'editor/documents/'+w.currentDocId,
 			type: 'GET',
 			success: function(doc, status, xhr) {
 				window.location.hash = '#'+w.currentDocId;
 				callback.call(w, doc);
+				// Doing the following anywhere else may
+		        // throw a ui error in console.
+		        writer.layout.hide("east");
+		        writer.layout.toggle("west");
 			},
 			error: function(xhr, status, error) {
 				w.dialogManager.show('message', {
@@ -271,12 +273,27 @@ return function(writer) {
 	 * @param callback Called with one boolean parameter: true for successful save, false otherwise
 	 */
 	del.saveDocument = function(callback) {
+		if (!Drupal.settings.islandora_markup_editor.can_edit) {
+		      writer.dialogs.show('message', {
+		        title: 'Please Authenticate',
+		        msg: 'You do not possess the sufficient permissions to edit this data.',
+		        type: 'error'
+		      });
+		      return;
+		    }
+		
+		writer.mode == writer.XMLRDF;
+		var schemaUrl = w.schemaManager.schemas[w.schemaManager.schemaId].url;
 		var docText = w.converter.getDocumentContent(true);
 		$.ajax({
-			url : w.baseUrl+'editor/documents/'+w.currentDocId,
+			url : window.parent.Drupal.settings.basePath + 'islandora/markupeditor/save_data/' + PID,
 			type: 'PUT',
 			dataType: 'json',
-			data: docText,
+		    data: {
+		        "text": docText,
+		        "valid": true,
+		        "schema": schemaUrl,
+		    },
 			success: function(data, status, xhr) {
 				w.editor.isNotDirty = 1; // force clean state
 				w.dialogManager.show('message', {
@@ -309,5 +326,3 @@ return function(writer) {
 	
 	return del;
 };
-
-});
