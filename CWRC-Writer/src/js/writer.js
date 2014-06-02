@@ -584,7 +584,7 @@ return function(config) {
 				// link the writer and editor
 				w.editor = ed;
 				ed.writer = w;
-				console.log(config.buttons1);
+				
 				// custom properties added to the editor
 				ed.currentEntity = null; // the id of the currently highlighted entity
 				ed.currentStruct = null; // the id of the currently selected structural tag

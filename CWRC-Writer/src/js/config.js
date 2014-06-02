@@ -60,18 +60,15 @@ var require = {
 	deps: ['jquery',
 	       'knockout'],
 	callback: function($, knockout) {
-		console.log("callback");
-		window.ko = knockout; // requirejs shim isn't working for knockout.
-		require([
-		         'writer',
+		window.ko = knockout; // requirejs shim isn't working for knockout
+		
+		require(['writer',
 		         'delegator',
 		         'jquery.layout',
 		         'jquery.tablayout',
 		         'jquery.snippet' // need to move to viewsource plugin
-		],
-		function(Writer, Delegator) {
+		], function(Writer, Delegator) {
 			$(function() {
-				console.log(window);
 				cwrcWriterInit.call(window, Writer, Delegator);
 			});
 		});

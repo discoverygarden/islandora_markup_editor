@@ -1,7 +1,4 @@
 var dsid = "OBJ";
-//window.onload = function() {
-	
-	//cwrcWriterInit(Writer, Delegator);
 	function cwrcWriterInit(Writer, Delegator) {
 		
 	  $('#page_selector').hide();
@@ -39,9 +36,9 @@ var dsid = "OBJ";
 	    Drupal.settings.islandora_markup_editor.module_edit_base;
 	  var config = {
 	    id: 'editor',
-	    delegator: Delegator,//islandoraBackendDelegate,
+	    delegator: Delegator,
 	    cwrcRootUrl: moduleUrl + '/CWRC-Writer/src/',
-	    buttons1: null,
+	    buttons1: 'schematags,|,addperson,addplace,adddate,addevent,addorg,addcitation,addtitle,addcorrection,addkeyword,addlink,|,editTag,removeTag,|,addtriple,|,viewsource,editsource,|,validate,savebutton,loadbutton',
 	    schemas: Drupal.settings.islandora_markup_editor.schema_object['schemas']
 	  };
 		
@@ -86,46 +83,3 @@ var dsid = "OBJ";
 			}
 		});
 	};
-	
-	
-	
-	
-  // Hide the content we dont need.
-//  $('#page_selector').hide();
-//  $('#header-inner').hide();
-//  $('#pageChange').hide();
-//  $('#header_label_wrapper').hide();
-//  $('#annotation_tab').hide();
-
-//  PID = Drupal.settings.islandora_markup_editor.page_pid;
-//  cwrc_params = {};
-//  window.location.hash = '#' + PID;
-//  writer = null;
-//  moduleUrl = Drupal.settings.basePath +
-//    Drupal.settings.islandora_markup_editor.module_edit_base;
-//  var config = {
-//    delegator: islandoraBackendDelegate,
-//    cwrcRootUrl: moduleUrl + '/CWRC-Writer/src/',
-//    schemas: Drupal.settings.islandora_markup_editor.schema_object['schemas']
-//  };
-//  $.ajax({
-//    url: Drupal.settings.basePath + Drupal.settings.islandora_markup_editor.page_setup + PID,
-//    timeout: 3000,
-//    async: false,
-//    dataType: 'json',
-//    success: function(data, status, xhr) {
-//      cwrc_params = data;
-//      config.project = data;
-//      writer = new Writer(config);
-//      writer.currentDocId = PID;
-//      writer.schemaId = "doc_default";
-//      writer.init();
-//      // Close the UIPanes.
-//     // writer.layout.hide("east");
-//      //writer.layout.toggle("west");
-//    },
-//    error: function() {
-//      console.log("Error");
-//    }
-//  });
-//}

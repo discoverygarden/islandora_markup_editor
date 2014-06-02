@@ -211,7 +211,7 @@ return function(writer) {
 		var schemaUrl = w.schemaManager.schemas[w.schemaManager.schemaId].url;
 		
 		$.ajax({
-			url: Drupal.settings.islandora_markup_editor.validate_path,
+			url: Drupal.settings.islandora_markup_editor.validate_path,//w.baseUrl+'services/validator/validate.html',
 			type: 'POST',
 			dataType: 'xml',
 			data: {
@@ -253,6 +253,10 @@ return function(writer) {
 			success: function(doc, status, xhr) {
 				window.location.hash = '#'+w.currentDocId;
 				callback.call(w, doc);
+				// Doing the following anywhere else may
+		        // throw a ui error in console.
+		        writer.layout.hide("east");
+		        writer.layout.toggle("west");
 			},
 			error: function(xhr, status, error) {
 				w.dialogManager.show('message', {
@@ -271,20 +275,27 @@ return function(writer) {
 	 * @param callback Called with one boolean parameter: true for successful save, false otherwise
 	 */
 	del.saveDocument = function(callback) {
+		if (!Drupal.settings.islandora_markup_editor.can_edit) {
+		      writer.dialogs.show('message', {
+		        title: 'Please Authenticate',
+		        msg: 'You do not possess the sufficient permissions to edit this data.',
+		        type: 'error'
+		      });
+		      return;
+		    }
+		
+		writer.mode == writer.XMLRDF;
+		var schemaUrl = w.schemaManager.schemas[w.schemaManager.schemaId].url;
 		var docText = w.converter.getDocumentContent(true);
-		var schemaUrl = w.schemaManager.schemas[w.schemaManager.schemaId].url
-		console.log("saving");
-		console.log(window.parent.Drupal.settings.basePath + 'islandora/markupeditor/save_data/' + PID);
 		$.ajax({
 			url : window.parent.Drupal.settings.basePath + 'islandora/markupeditor/save_data/' + PID,
-			type: 'POST',
-			async: false,
-		      dataType: 'text',
-		      data: {
+			type: 'PUT',
+			dataType: 'json',
+		    data: {
 		        "text": docText,
 		        "valid": true,
 		        "schema": schemaUrl,
-		      },
+		    },
 			success: function(data, status, xhr) {
 				w.editor.isNotDirty = 1; // force clean state
 				w.dialogManager.show('message', {
