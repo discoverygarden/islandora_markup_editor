@@ -12,7 +12,6 @@
 <div id="cwrc_wrapper" class="cwrc_wrapper islandora-crited-iframe-wrapper iframe_replacement" style="width: 100%; height:600px">
 <input id="full-window-button" type="button" value="Full Window" />
 
-    <!--<div id="cwrc_wrapper" class="cwrc_wrapper islandora-crited-iframe-wrapper" style="width: 100%; height:600px">-->
       <div id="header" class="ui-layout-north">
         <!-- TODO: These are being hidden in the 'startup.js' script.-->
         <div id="page_selector">Loading....</div>
