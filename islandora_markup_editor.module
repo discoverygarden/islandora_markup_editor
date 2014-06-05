@@ -224,7 +224,6 @@ function islandora_markup_editor_preprocess_islandora_markup_editor(&$variables)
   drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/cwrcDialogs/css/datepicker.css");
   drupal_add_css($islandora_markup_editor_module_path . "/CWRC-Writer/src/js/cwrcDialogs/css/cD.css");
 
-
   islandora_markup_editor_add_files_from_dir($islandora_markup_editor_module_path . "/css", "css");
 
   $custom_js = isset($variables['custom_js']) ? $variables['custom_js'] : $islandora_markup_editor_module_path . "/js";
