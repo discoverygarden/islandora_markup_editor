@@ -40,6 +40,48 @@ function islandora_markup_editor_fetch_tei_processing_instruction(AbstractObject
 }
 
 /**
+ * Helper function to default drupal settings to a preprocess funciton.
+ *
+ * @param array $variables
+ *   Call this function from a preprocess function, and pass the
+ *   variables here.
+ */
+function islandora_markup_editor_add_markup_editor_drupal_settings($variables) {
+  // Include required modules.
+  module_load_include('inc', 'islandora_markup_editor', 'includes/utilities');
+  module_load_include('inc', 'islandora_paged_content', 'includes/utilities');
+  module_load_include('inc', 'php_lib', 'DOMHelpers');
+
+  // Construct our custom settings.
+  $islandora_markup_editor_module_path = drupal_get_path('module', 'islandora_markup_editor');
+  $view = islandora_object_access_callback(ISLANDORA_VIEW_OBJECTS, $variables['islandora_object']);
+  $view_edit = islandora_object_access_callback(ISLANDORA_CRITICAL_EDITION_EDIT_WITH_CWRC_WRITER, $variables['islandora_object']);
+  $validate_path = variable_get('islandora_critical_edition_validate_url', '/validator/validate.html');
+  $doc_process_instructions = islandora_markup_editor_fetch_tei_processing_instruction($variables['islandora_object']);
+
+  // This is silly. We need to override the default tei schema with our own.
+  $schema_object = array();
+  $schema_object['schemas']['tei'] = array(
+    'cssUrl' => file_create_url("$islandora_markup_editor_module_path/CWRC-Writer/src/css/tei_converted.css"),
+    'name' => 'tei',
+    'url' => $doc_process_instructions['href'],
+  );
+
+  // Add our custom settings.
+  drupal_add_js(array('islandora_markup_editor' => array('can_edit' => $view_edit)), 'setting');
+  drupal_add_js(array('islandora_markup_editor' => array('can_view' => $view)), 'setting');
+  drupal_add_js(array('islandora_markup_editor' => array('module_edit_base' => $islandora_markup_editor_module_path)), 'setting');
+  drupal_add_js(array('islandora_markup_editor' => array('entities_search_callback' => url('islandora/entities/search'))), 'setting');
+  drupal_add_js(array('islandora_markup_editor' => array('schema_object' => $schema_object)), 'setting');
+  drupal_add_js(array('islandora_markup_editor' => array('page_setup' => "islandora/markupeditor/setup/")), 'setting');
+  drupal_add_js(array('islandora_markup_editor' => array('page_pid' => $variables['islandora_object']->id)), 'setting');
+  drupal_add_js(array('islandora_markup_editor' => array('validate_path' => $validate_path)), 'setting');
+
+  // Legacy code, supports old dialog boxes, to an extent. To be removed in next library update.
+  drupal_add_js(array('islandora_critical_edition' => array('module_edit_base' => $islandora_markup_editor_module_path)), 'setting');
+  drupal_add_js(array('islandora_critical_edition' => array('module_base' => $islandora_markup_editor_module_path)), 'setting');
+}
+/**
  * Query a FedoraObjects datastream for an xml processor instruction.
  *
  * @param string $xml

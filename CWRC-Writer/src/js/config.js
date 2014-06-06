@@ -53,7 +53,7 @@ var require = {
 			deps: ['jquery', 'jquery-ui', 'knockout', 'bootstrap', 'bootstrap-datepicker', 'cwrc-api']
 		}
 	},
-	// cache busting
+	// cache busting      	baseUrl: '../../' + Drupal.settings.islandora_markup_editor.module_edit_base + '/CWRC-Writer/src/js',
 //	urlArgs: "bust=" +  (new Date()).getTime(),
 	
 	// initial dependencies
