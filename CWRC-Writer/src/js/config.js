@@ -1,5 +1,5 @@
 var require = {
-	baseUrl: '../../sites/all/modules/islandora_markup_editor/CWRC-Writer/src/js',
+	baseUrl: window.location.protocol + "//" + window.location.hostname + "/sites/all/modules/islandora_markup_editor/CWRC-Writer/src/js",
 	paths: {
 		'jquery': 'lib/jquery/jquery-1.9.1',
 		'jquery-ui': 'lib/jquery/jquery-ui-1.10.4.custom',
