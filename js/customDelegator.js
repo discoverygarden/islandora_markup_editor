@@ -207,7 +207,7 @@ var CustomDelegator = function(writer) {
 	del.validate = function(callback) {
 		var docText = w.converter.getDocumentContent(false);
 		var schemaUrl = w.schemaManager.schemas[w.schemaManager.schemaId].url;
-		
+		console.log(docText);
 		$.ajax({
 			url: Drupal.settings.islandora_markup_editor.validate_path,//w.baseUrl+'services/validator/validate.html',
 			type: 'POST',

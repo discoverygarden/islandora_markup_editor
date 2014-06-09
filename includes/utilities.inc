@@ -23,7 +23,7 @@ function islandora_markup_editor_fetch_tei_processing_instruction(AbstractObject
 
   $result = islandora_markup_editor_query_for_processing_instruction($object[$dsid]->content);
 
-  if (!$result->item(0)) {
+  if (!$result->length == 0) {
     // No processing instruction, add the default.
     islandora_markup_editor_add_tei_processing_instruction($object, "", $dsid);
     $result = islandora_markup_editor_query_for_processing_instruction($object[$dsid]->content);
@@ -67,20 +67,25 @@ function islandora_markup_editor_add_markup_editor_drupal_settings($variables) {
     'url' => $doc_process_instructions['href'],
   );
 
-  // Add our custom settings.
-  drupal_add_js(array('islandora_markup_editor' => array('can_edit' => $view_edit)), 'setting');
-  drupal_add_js(array('islandora_markup_editor' => array('can_view' => $view)), 'setting');
-  drupal_add_js(array('islandora_markup_editor' => array('module_edit_base' => $islandora_markup_editor_module_path)), 'setting');
-  drupal_add_js(array('islandora_markup_editor' => array('entities_search_callback' => url('islandora/entities/search'))), 'setting');
-  drupal_add_js(array('islandora_markup_editor' => array('schema_object' => $schema_object)), 'setting');
-  drupal_add_js(array('islandora_markup_editor' => array('page_setup' => "islandora/markupeditor/setup/")), 'setting');
-  drupal_add_js(array('islandora_markup_editor' => array('page_pid' => $variables['islandora_object']->id)), 'setting');
-  drupal_add_js(array('islandora_markup_editor' => array('validate_path' => $validate_path)), 'setting');
-
-  // Legacy code, supports old dialog boxes, to an extent. To be removed in next library update.
-  drupal_add_js(array('islandora_critical_edition' => array('module_edit_base' => $islandora_markup_editor_module_path)), 'setting');
-  drupal_add_js(array('islandora_critical_edition' => array('module_base' => $islandora_markup_editor_module_path)), 'setting');
+  // The Critical Edition entry here is to temporarily support the old
+  // dialogue boxes as they are still under development.
+  drupal_add_js(
+    array(
+      'islandora_markup_editor' => array(
+        'can_edit' => $view_edit,
+        'can_view' => $view,
+        'module_edit_base' => $islandora_markup_editor_module_path,
+        'entities_search_callback' => url('islandora/entities/search'),
+        'schema_object' => $schema_object,
+        'page_setup' => "islandora/markupeditor/setup/",
+        'page_pid' => $variables['islandora_object']->id,
+        'validate_path' => $validate_path,
+      ),
+    ),
+    'setting'
+  );
 }
+
 /**
  * Query a FedoraObjects datastream for an xml processor instruction.
  *
@@ -108,7 +113,7 @@ function islandora_markup_editor_query_for_processing_instruction($xml) {
  * @param string $direc
  *   The directory the files reside in.
  * @param string $file_type
- *   For now, ither .js or .css.
+ *   For now, either .js or .css.
  */
 function islandora_markup_editor_add_files_from_dir($direc, $file_type = 'js') {
   $function = "drupal_add_" . $file_type;
@@ -159,7 +164,7 @@ function islandora_markup_editor_add_tei_processing_instruction(AbstractObject $
   }
   $trimmed = trim($processing_string);
 
-  $src_doc = new DOMDocument("1.0", "ISO-8859-15");
+  $src_doc = new DOMDocument("1.0", "UTF-8");
   $src_doc->preserveWhiteSpace = FALSE;
   $src_doc->formatOutput = TRUE;
   $rng_schema = $src_doc->createProcessingInstruction('xml-model', $trimmed);
