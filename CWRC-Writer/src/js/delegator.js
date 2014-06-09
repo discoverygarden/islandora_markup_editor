@@ -1,5 +1,7 @@
-function Delegator(config) {
-	var w = config.writer;
+define(['jquery'], function($) {
+	
+return function(writer) {
+	var w = writer;
 	
 	var del = {};
 	
@@ -116,12 +118,97 @@ function Delegator(config) {
 					});
 				}
 			});
+		} else if (lookupService == 'geonames') {
+			$.ajax({
+					url: 'http://ws.geonames.org/searchJSON',
+					data: {
+						q: encodeURIComponent(query),
+						maxRows: 25,
+						username: 'cwrcwriter'
+					},
+					dataType: 'json',
+					success: function(data, status, xhr) {
+						callback.call(w, data.geonames);
+					}
+			});
 		}
 	};
 	
+	/**
+	 * Gets the URI for the entity
+	 * @param {Object} entity The entity object
+	 * @returns {Promise} The promise object
+	 */
+	del.getUriForEntity = function(entity) {
+		var guid = createGuid();
+		var uri = 'http://id.cwrc.ca/'+entity.props.type+'/'+guid;
+		var dfd = new $.Deferred();
+		dfd.resolve(uri);
+		return dfd.promise();
+	};
+	
+	/**
+	 * Gets the URI for the annotation
+	 * @param {Object} entity The entity object
+	 * @returns {Promise} The promise object
+	 */
+	del.getUriForAnnotation = function() {
+		var guid = createGuid();
+		var uri = 'http://id.cwrc.ca/annotation/'+guid;
+		var dfd = new $.Deferred();
+		dfd.resolve(uri);
+		return dfd.promise();
+	};
+	
+	/**
+	 * Gets the URI for the document
+	 * @param {Object} entity The entity object
+	 * @returns {Promise} The promise object
+	 */
+	del.getUriForDocument = function() {
+		var guid = createGuid();
+		var uri = 'http://id.cwrc.ca/doc/'+guid;
+		var dfd = new $.Deferred();
+		dfd.resolve(uri);
+		return dfd.promise();
+	};
+	
+	/**
+	 * Gets the URI for the selector
+	 * @param {Object} entity The entity object
+	 * @returns {Promise} The promise object
+	 */
+	del.getUriForSelector = function() {
+		var guid = createGuid();
+		var uri = 'http://id.cwrc.ca/selector/'+guid;
+		var dfd = new $.Deferred();
+		dfd.resolve(uri);
+		return dfd.promise();
+	};
+	
+	/**
+	 * Gets the URI for the user
+	 * @param {Object} entity The entity object
+	 * @returns {Promise} The promise object
+	 */
+	del.getUriForUser = function() {
+		var guid = createGuid();
+		var uri = 'http://id.cwrc.ca/user/'+guid;
+		var dfd = new $.Deferred();
+		dfd.resolve(uri);
+		return dfd.promise();
+	};
+	
+	function createGuid() {
+	    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+	        var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
+	        return v.toString(16);
+	    });
+	}
+	
 	del.validate = function(callback) {
-		var docText = w.fm.getDocumentContent(false);
-		var schemaUrl = w.schemas[w.schemaId].url;
+		var docText = w.converter.getDocumentContent(false);
+		var schemaUrl = w.schemaManager.schemas[w.schemaManager.schemaId].url;
 		
 		$.ajax({
 			url: w.baseUrl+'services/validator/validate.html',
@@ -133,30 +220,23 @@ function Delegator(config) {
 				content: docText
 			},
 			success: function(data, status, xhr) {
+				var valid = $('status', data).text() == 'pass';
 				if (callback) {
-					var valid = $('status', data).text() == 'pass';
 					callback.call(w, valid);
 				} else {
-					w.validation.showValidationResult(data, docText);
+					w.event('documentValidated').publish(valid, data, docText);
 				}
 			},
 			error: function() {
-//				 $.ajax({
-//					url : 'xml/validation.xml',
-//					success : function(data, status, xhr) {
-//						if (callback) {
-//							var valid = $('status', data).text() == 'pass';
-//							callback(valid);
-//						} else {
-//							w.validation.showValidationResult(data, docText);
-//						}
-//					}
-//				}); 
-				w.dialogs.show('message', {
-					title: 'Error',
-					msg: 'An error occurred while trying to validate the document.',
-					type: 'error'
-				});
+				if (callback) {
+					callback.call(w, null);
+				} else {
+					w.dialogManager.show('message', {
+						title: 'Error',
+						msg: 'An error occurred while trying to validate the document.',
+						type: 'error'
+					});
+				}
 			}
 		});
 	};
@@ -175,7 +255,7 @@ function Delegator(config) {
 				callback.call(w, doc);
 			},
 			error: function(xhr, status, error) {
-				w.dialogs.show('message', {
+				w.dialogManager.show('message', {
 					title: 'Error',
 					msg: 'An error ('+status+') occurred and '+w.currentDocId+' was not loaded.',
 					type: 'error'
@@ -191,7 +271,7 @@ function Delegator(config) {
 	 * @param callback Called with one boolean parameter: true for successful save, false otherwise
 	 */
 	del.saveDocument = function(callback) {
-		var docText = w.fm.getDocumentContent(true);
+		var docText = w.converter.getDocumentContent(true);
 		$.ajax({
 			url : w.baseUrl+'editor/documents/'+w.currentDocId,
 			type: 'PUT',
@@ -199,7 +279,7 @@ function Delegator(config) {
 			data: docText,
 			success: function(data, status, xhr) {
 				w.editor.isNotDirty = 1; // force clean state
-				w.dialogs.show('message', {
+				w.dialogManager.show('message', {
 					title: 'Document Saved',
 					msg: w.currentDocId+' was saved successfully.'
 				});
@@ -207,9 +287,11 @@ function Delegator(config) {
 				if (callback) {
 					callback.call(w, true);
 				}
+				
+				w.event('documentSaved').publish();
 			},
 			error: function() {
-				w.dialogs.show('message', {
+				w.dialogManager.show('message', {
 					title: 'Error',
 					msg: 'An error occurred and '+w.currentDocId+' was not saved.',
 					type: 'error'
@@ -222,30 +304,10 @@ function Delegator(config) {
 	};
 	
 	del.getHelp = function(tagName) {
-		return w.u.getDocumentationForTag(tagName);
-	};
-	
-	/**
-	 * Editor based event system.
-	 * @param name: The name of the editor event. Possible values
-	 *   are highlightEntity_looseFocus,
-	 *       highlightEntity_gainFocus
-	 * @param data: Editor data associated with the event.
-	 */
-	del.editorCallback = function(name,data) {
-		switch (name) {
-			case 'highlightEntity_looseFocus':
-				if($(data).hasClass('person')) {
-					
-				}
-				break;
-			case 'highlightEntity_gainFocus':
-				if($(data).hasClass('place')) {
-					
-				}
-				break;
-			}
+		return w.utilities.getDocumentationForTag(tagName);
 	};
 	
 	return del;
-}
+};
+
+});

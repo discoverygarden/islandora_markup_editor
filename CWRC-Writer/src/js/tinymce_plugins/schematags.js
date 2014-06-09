@@ -32,7 +32,10 @@
 						parentContainer.wrap('<div class="cwrc" />');
 					}
 					
-					t.editor.writer.tree.disableHotkeys();
+					// TODO move this to an event
+					if (t.editor.writer.tree) {
+						t.editor.writer.tree.disableHotkeys();
+					}
 					
 					var filterKey;
 					// get the node from currentBookmark if available, otherwise use currentNode
@@ -56,7 +59,7 @@
 					
 					var validKeys = [];
 					if (filterKey != t.editor.writer.header) {
-						validKeys = t.editor.writer.u.getChildrenForTag({tag: filterKey, returnType: 'names'});
+						validKeys = t.editor.writer.utilities.getChildrenForTag({tag: filterKey, returnType: 'names'});
 					}
 					var item;
 					var count = 0, disCount = 0;
@@ -78,7 +81,10 @@
 				});
 				
 				menu.onHideMenu.add(function(m) {
-					t.editor.writer.tree.enableHotkeys();
+					// TODO move this to an event
+					if (t.editor.writer.tree) {
+						t.editor.writer.tree.enableHotkeys();
+					}
 				});
 				
 				t.buildMenu(menu, node, config);
@@ -101,7 +107,11 @@
 				
 				var valid = t.editor.execCommand('isSelectionValid', true, t.action);
 				if (valid != 2) {
-					t.editor.execCommand('showError', valid);
+					t.editor.writer.dialogManager.show('message', {
+						title: 'Error',
+						msg: 'Please ensure that the beginning and end of your selection have a common parent.<br/>For example, your selection cannot begin in one paragraph and end in another, or begin in bolded text and end outside of that text.',
+						type: 'error'
+					});
 					return;
 				}
 				
@@ -238,7 +248,10 @@
 			var w = t.editor.writer;
 			
 			t.editor.getBody().blur(); // lose keyboard focus in editor
-			w.tree.disableHotkeys();
+			// TODO move this to an event
+			if (w.tree) {
+				w.tree.disableHotkeys();
+			}
 			
 			var structsEntry = null;
 			if (t.mode == t.EDIT) {
@@ -258,7 +271,7 @@
 				$('.schemaHelp', parent).html('<h3>'+key+' Documentation</h3><p>'+helpText+'</p>');
 			}
 			
-			var atts = t.editor.writer.u.getChildrenForTag({tag: key, type: 'attribute', returnType: 'array'});
+			var atts = t.editor.writer.utilities.getChildrenForTag({tag: key, type: 'attribute', returnType: 'array'});
 			
 			var canTagContainAttributes = atts.length != 0;
 			
@@ -413,7 +426,10 @@
 					if (console) console.log('error destroying tooltip');
 				}
 				
-				t.editor.writer.tree.enableHotkeys();
+				// TODO move this to an event
+				if (t.editor.writer.tree) {
+					t.editor.writer.tree.enableHotkeys();
+				}
 				
 				switch (t.mode) {
 					case t.ADD:

@@ -1,5 +1,7 @@
-function Tagger(config) {
-	var w = config.writer;
+define(['jquery'], function($) {
+	
+return function(writer) {
+	var w = writer;
 	
 	var tagger = {};
 	
@@ -12,6 +14,7 @@ function Tagger(config) {
 	 */
 	tagger.insertBoundaryTags = function(id, type, range) {
 		var sel = w.editor.selection;
+		sel.setRng(range);
 		var bm = sel.getBookmark();
 		
 		var start = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' start', 'name': id}, '');
@@ -143,14 +146,19 @@ function Tagger(config) {
 			switch (nodes.length) {
 				case 0:
 					updateRequired = true;
-					w.entitiesList.remove(id);
+					// TODO find better way to do this
+					if (w.entitiesList) {
+						w.entitiesList.remove(id);
+					}
 					w.deletedEntities[id] = w.entities[id];
 					delete w.entities[id];
 					break;
 				case 1:
 					updateRequired = true;
 					w.editor.dom.remove(nodes[0]);
-					w.entitiesList.remove(id);
+					if (w.entitiesList) {
+						w.entitiesList.remove(id);
+					}
 					w.deletedEntities[id] = w.entities[id];
 					delete w.entities[id];
 			}
@@ -222,11 +230,12 @@ function Tagger(config) {
 			if ($(tag.struct, w.editor.getBody()).attr('_tag')) {
 				w.editor.execCommand('editSchemaTag', tag.struct, pos);
 			} else {
-				w.editor.execCommand('editCustomTag', tag.struct, pos);
+				alert('Tag not recognized!');
 			}
 		} else if (tag.entity) {
+			w.editor.currentBookmark = w.editor.selection.getBookmark(1);
 			var type = tag.entity.props.type;
-			w.dialogs.show(type, {type: type, title: w.em.getTitle(type), pos: pos, entry: tag.entity});
+			w.dialogManager.show(type, {type: type, title: w.entitiesModel.getTitle(type), pos: pos, entry: tag.entity});
 		}
 	};
 	
@@ -245,13 +254,13 @@ function Tagger(config) {
 	tagger.removeTag = function(id) {
 		if (id != null) {
 			if (w.entities[id]) {
-				w.removeEntity(id);
+				tagger.removeEntity(id);
 			} else if (w.structs[id]) {
 				tagger.removeStructureTag(id);
 			}
 		} else {
 			if (w.editor.currentEntity != null) {
-				w.removeEntity(w.editor.currentEntity);
+				tagger.removeEntity(w.editor.currentEntity);
 			} else if (w.editor.currentStruct != null) {
 				tagger.removeStructureTag(w.editor.currentStruct);
 			}
@@ -263,12 +272,129 @@ function Tagger(config) {
 	 * Add our own undo level, then erase the next one that gets added by tinymce
 	 */
 	function _doCustomTaggerUndo() {
+		// TODO update for 4
 		w.editor.undoManager.add();
 		w.editor.undoManager.onAdd.addToTop(function() {
 			this.data.splice(this.data.length-1, 1); // remove last undo level
 			this.onAdd.listeners.splice(0, 1); // remove this listener
 		}, w.editor.undoManager);
 	}
+	
+	tagger.addEntity = function(type) {
+		var result = w.utilities.isSelectionValid();
+		if (result == w.VALID) {
+			w.editor.currentBookmark = w.editor.selection.getBookmark(1);
+			w.dialogManager.show(type, {type: type, title: w.entitiesModel.getTitle(type), pos: w.editor.contextMenuPos});
+		} else if (result == w.NO_SELECTION) {
+			w.dialogManager.show('message', {
+				title: 'Error',
+				msg: 'Please select some text before adding an entity or tag.',
+				type: 'error'
+			});
+		} else if (result == w.NO_COMMON_PARENT) {
+			w.dialogManager.show('message', {
+				title: 'Error',
+				msg: 'Please ensure that the beginning and end of your selection have a common parent.<br/>For example, your selection cannot begin in one paragraph and end in another, or begin in bolded text and end outside of that text.',
+				type: 'error'
+			});
+		}
+	};
+	
+	tagger.finalizeEntity = function(type, info) {
+		w.editor.selection.moveToBookmark(w.editor.currentBookmark);
+		if (info != null) {
+			// add attributes to tag
+//			var startTag = w.editor.$('[name='+id+'][class~=start]');
+//			for (var key in info) {
+//				startTag.attr(key, w.utilities.escapeHTMLString(info[key]));
+//			}
+			
+			var id = tagger.addEntityTag(type);
+			w.entities[id].info = info;
+			
+			$.when(
+				w.delegator.getUriForEntity(w.entities[id]),
+				w.delegator.getUriForAnnotation(),
+				w.delegator.getUriForDocument(),
+				w.delegator.getUriForSelector(),
+				w.delegator.getUriForUser()
+			).then(function(entityUri, annoUri, docUri, selectorUri, userUri) {
+				w.entities[id].annotation = {
+					entityId: entityUri,
+					annotationId: annoUri,
+					docId: docUri,
+					selectorId: selectorUri,
+					userId: userUri,
+					range: {}
+				};
+				
+				w.event('entityAdded').publish(id);
+			});
+		}
+		w.editor.currentBookmark = null;
+		w.editor.focus();
+	};
+	
+	tagger.editEntity = function(id, info) {
+		w.entities[id].info = info;
+		w.event('entityEdited').publish(id);
+	};
+	
+	tagger.copyEntity = function(id, pos) {
+		var tag = tagger.getCurrentTag(id);
+		if (tag.entity) {
+			w.editor.entityCopy = tag.entity;
+			w.event('entityCopied').publish(id);
+		} else {
+			w.dialogManager.show('message', {
+				title: 'Error',
+				msg: 'Cannot copy structural tags.',
+				type: 'error'
+			});
+		}
+	};
+	
+	tagger.pasteEntity = function(pos) {
+		if (w.editor.entityCopy == null) {
+			w.dialogManager.show('message', {
+				title: 'Error',
+				msg: 'No entity to copy!',
+				type: 'error'
+			});
+		} else {
+			var newEntity = jQuery.extend(true, {}, w.editor.entityCopy);
+			newEntity.props.id = tinymce.DOM.uniqueId('ent_');
+			
+			w.editor.selection.moveToBookmark(w.editor.currentBookmark);
+			var sel = w.editor.selection;
+			sel.collapse();
+			var rng = sel.getRng(true);
+			var text = w.editor.getDoc().createTextNode(newEntity.props.content);
+			rng.insertNode(text);
+			sel.select(text);
+			
+			rng = sel.getRng(true);
+			tagger.insertBoundaryTags(newEntity.props.id, newEntity.props.type, rng);
+			
+			w.entities[newEntity.props.id] = newEntity;
+			
+			w.event('entityPasted').publish(newEntity.props.id);
+		}
+	};
+	
+	tagger.removeEntity = function(id) {
+		id = id || w.editor.currentEntity;
+		
+		delete w.entities[id];
+		var node = $('span[name="'+id+'"]', w.editor.getBody());
+		var parent = node[0].parentNode;
+		node.remove();
+		parent.normalize();
+		
+		w.event('entityRemoved').publish(id);
+		
+		w.editor.currentEntity = null;
+	};
 	
 	tagger.addEntityTag = function(type) {
 		_doCustomTaggerUndo();
@@ -290,7 +416,7 @@ function Tagger(config) {
 			content = content.replace(/^\s+|\s+$/g, '');
 		}
 		
-		var title = w.u.getTitleFromContent(content);
+		var title = w.utilities.getTitleFromContent(content);
 		
 		var id = tinymce.DOM.uniqueId('ent_');
 		w.editor.currentEntity = id;
@@ -329,7 +455,7 @@ function Tagger(config) {
 		
 		var id = tinymce.DOM.uniqueId('struct_');
 		attributes.id = id;
-		attributes._textallowed = w.u.canTagContainText(attributes._tag);
+		attributes._textallowed = w.utilities.canTagContainText(attributes._tag);
 		w.structs[id] = attributes;
 		w.editor.currentStruct = id;
 		
@@ -345,7 +471,7 @@ function Tagger(config) {
 			}
 		}
 		
-		var tagName = w.u.getTagForEditor(attributes._tag);
+		var tagName = w.utilities.getTagForEditor(attributes._tag);
 		var open_tag = '<'+tagName;
 		for (var key in attributes) {
 			if (key == 'id' || key.match(/^_/) != null) {
@@ -387,7 +513,7 @@ function Tagger(config) {
 			tempNode.replaceWith(content);
 		}
 		
-		w.tree.update();
+		w.event('tagAdded').publish(id);
 		
 		if (selection == '\uFEFF') {
 			w.selectStructureTag(id, true);
@@ -423,7 +549,8 @@ function Tagger(config) {
 			}
 		}
 		w.structs[id] = attributes;
-		w.tree.update();
+		
+		w.event('tagEdited').publish(id);
 	};
 	
 	tagger.removeStructureTag = function(id, removeContents) {
@@ -432,7 +559,7 @@ function Tagger(config) {
 		id = id || w.editor.currentStruct;
 		
 		if (removeContents == undefined) {
-			if (w.tree.currentlySelectedNode != null && w.tree.selectionType != null) {
+			if (w.tree && w.tree.currentlySelectedNode != null && w.tree.selectionType != null) {
 				removeContents = true;
 			}
 		}
@@ -451,8 +578,8 @@ function Tagger(config) {
 			parent.normalize();
 		}
 		
-		w.tagger.findNewAndDeletedTags();
-		w.tree.update();
+		w.event('tagRemoved').publish(id);
+		
 		w.editor.currentStruct = null;
 	};
 	
@@ -461,9 +588,15 @@ function Tagger(config) {
 		
 		var node = $('#'+id, w.editor.getBody());
 		node.contents().remove();
-		w.tagger.findNewAndDeletedTags();
-		w.tree.update();
+		
+		w.event('tagContentsRemoved').publish(id);
 	};
 	
+	w.event('tagRemoved').subscribe(tagger.findNewAndDeletedTags);
+	w.event('tagContentsRemoved').subscribe(tagger.findNewAndDeletedTags);
+	w.event('contentPasted').subscribe(tagger.findDuplicateTags);
+	
 	return tagger;
-}
+};
+
+});

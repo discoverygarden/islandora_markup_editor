@@ -23,7 +23,7 @@ function islandora_markup_editor_fetch_tei_processing_instruction(AbstractObject
 
   $result = islandora_markup_editor_query_for_processing_instruction($object[$dsid]->content);
 
-  if (!$result->item(0)) {
+  if (!$result->length == 0) {
     // No processing instruction, add the default.
     islandora_markup_editor_add_tei_processing_instruction($object, "", $dsid);
     $result = islandora_markup_editor_query_for_processing_instruction($object[$dsid]->content);
@@ -37,6 +37,53 @@ function islandora_markup_editor_fetch_tei_processing_instruction(AbstractObject
     $return[$split_arr[0]] = str_replace('"', '', $split_arr[1]);
   }
   return $return;
+}
+
+/**
+ * Helper function to default drupal settings to a preprocess funciton.
+ *
+ * @param array $variables
+ *   Call this function from a preprocess function, and pass the
+ *   variables here.
+ */
+function islandora_markup_editor_add_markup_editor_drupal_settings($variables) {
+  // Include required modules.
+  module_load_include('inc', 'islandora_markup_editor', 'includes/utilities');
+  module_load_include('inc', 'islandora_paged_content', 'includes/utilities');
+  module_load_include('inc', 'php_lib', 'DOMHelpers');
+
+  // Construct our custom settings.
+  $islandora_markup_editor_module_path = drupal_get_path('module', 'islandora_markup_editor');
+  $view = islandora_object_access_callback(ISLANDORA_VIEW_OBJECTS, $variables['islandora_object']);
+  $view_edit = islandora_object_access_callback(ISLANDORA_CRITICAL_EDITION_EDIT_WITH_CWRC_WRITER, $variables['islandora_object']);
+  $validate_path = variable_get('islandora_critical_edition_validate_url', '/validator/validate.html');
+  $doc_process_instructions = islandora_markup_editor_fetch_tei_processing_instruction($variables['islandora_object']);
+
+  // This is silly. We need to override the default tei schema with our own.
+  $schema_object = array();
+  $schema_object['schemas']['tei'] = array(
+    'cssUrl' => file_create_url("$islandora_markup_editor_module_path/CWRC-Writer/src/css/tei_converted.css"),
+    'name' => 'tei',
+    'url' => $doc_process_instructions['href'],
+  );
+
+  // The Critical Edition entry here is to temporarily support the old
+  // dialogue boxes as they are still under development.
+  drupal_add_js(
+    array(
+      'islandora_markup_editor' => array(
+        'can_edit' => $view_edit,
+        'can_view' => $view,
+        'module_edit_base' => $islandora_markup_editor_module_path,
+        'entities_search_callback' => url('islandora/entities/search'),
+        'schema_object' => $schema_object,
+        'page_setup' => "islandora/markupeditor/setup/",
+        'page_pid' => $variables['islandora_object']->id,
+        'validate_path' => $validate_path,
+      ),
+    ),
+    'setting'
+  );
 }
 
 /**
@@ -66,7 +113,7 @@ function islandora_markup_editor_query_for_processing_instruction($xml) {
  * @param string $direc
  *   The directory the files reside in.
  * @param string $file_type
- *   For now, ither .js or .css.
+ *   For now, either .js or .css.
  */
 function islandora_markup_editor_add_files_from_dir($direc, $file_type = 'js') {
   $function = "drupal_add_" . $file_type;
@@ -117,7 +164,7 @@ function islandora_markup_editor_add_tei_processing_instruction(AbstractObject $
   }
   $trimmed = trim($processing_string);
 
-  $src_doc = new DOMDocument("1.0", "ISO-8859-15");
+  $src_doc = new DOMDocument("1.0", "UTF-8");
   $src_doc->preserveWhiteSpace = FALSE;
   $src_doc->formatOutput = TRUE;
   $rng_schema = $src_doc->createProcessingInstruction('xml-model', $trimmed);

@@ -57,6 +57,12 @@ html, body {
 	margin-left: 55px;
 }
 
+#headerButtons > div {
+	float: right;
+	cursor: pointer;
+	margin-left: 20px;
+}
+
 #helpLink {
 	background: url("../img/help.png") no-repeat scroll 0 7px transparent;
     padding-left: 20px;
@@ -344,6 +350,14 @@ html, body {
 	margin: 2px 0 2px 5px;
 }
 
+#validation .message_more {
+	color: #999999;
+}
+
+#validation .message_more:hover {
+	text-decoration: underline;
+}
+
 #currentPath {
 	font-size: 11px;
 }
@@ -404,7 +418,7 @@ html, body {
 }
 
 #lookup_alternate ins, .attributeWidget ins {
-	display: inline-block;
+	display: inline-block !important;
 	vertical-align: bottom;
 	margin-left: -5px;
 }
@@ -491,20 +505,60 @@ html, body {
 	height: 300px;
 }
 
+.annotationDialog .leftPanel {
+	position: absolute;
+	top: 2%;
+	bottom: 2%;
+	left: 15px;
+	right: 50%;
+	border-right: 1px solid #aaa;
+	padding-right: 15px;
+	overflow: auto;
+}
+
+.annotationDialog .rightPanel {
+	position: absolute;
+	top: 15px;
+	bottom: 15px;
+	left: 50%;
+	right: 15px;
+	padding-left: 15px;
+}
+
 .annotationDialog p {
 	margin: 5px 0px;
 }
 
 .annotationDialog > div {
-	margin-bottom: 15px;
+	margin-bottom: 15px !important;
 }
 
 .annotationDialog .ui-accordion-content {
   padding: 5px 10px !important;
 }
 
-#titleDialog div, #correctionDialog div {
+.annotationDialog .tagAs {
+	font-size: 16px;
+}
+
+#correctionDialog div {
 	margin-bottom: 10px;
+}
+
+#titleDialog #title_level label span {
+	font-size: 9px;
+	display: block;
+	margin-left: 21px;
+}
+
+#titleDialog #title_level input[type="radio"] {
+	top: 8px;
+	position: relative;
+	margin-top: 8px;
+}
+
+#titleDialog #title_level input[type="radio"]:first-of-type {
+	margin-top: -2px;
 }
 
 #schemaDialog {
@@ -513,6 +567,15 @@ html, body {
 
 #schemaDialog .content {
 	margin-bottom: 0;
+}
+
+#keywordDialog .keywordRow input {
+	vertical-align: middle;
+	width: 150px;
+}
+
+#keywordDialog .keywordRow button {
+	margin-left: 5px;
 }
 
 .attributeWidget label {
