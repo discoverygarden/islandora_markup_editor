@@ -23,7 +23,7 @@ function islandora_markup_editor_fetch_tei_processing_instruction(AbstractObject
 
   $result = islandora_markup_editor_query_for_processing_instruction($object[$dsid]->content);
 
-  if (!$result->length == 0) {
+  if ($result->length == 0) {
     // No processing instruction, add the default.
     islandora_markup_editor_add_tei_processing_instruction($object, "", $dsid);
     $result = islandora_markup_editor_query_for_processing_instruction($object[$dsid]->content);
@@ -66,7 +66,6 @@ function islandora_markup_editor_add_markup_editor_drupal_settings($variables) {
     'name' => 'tei',
     'url' => $doc_process_instructions['href'],
   );
-
   // The Critical Edition entry here is to temporarily support the old
   // dialogue boxes as they are still under development.
   drupal_add_js(
@@ -80,6 +79,7 @@ function islandora_markup_editor_add_markup_editor_drupal_settings($variables) {
         'page_setup' => "islandora/markupeditor/setup/",
         'page_pid' => $variables['islandora_object']->id,
         'validate_path' => $validate_path,
+        'schema_pref' => array('valid' => 0),
       ),
     ),
     'setting'
