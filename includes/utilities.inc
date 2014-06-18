@@ -142,11 +142,10 @@ function islandora_markup_editor_add_files_from_dir($direc, $file_type = 'js') {
  * @return string
  *   The processing instruction as it appears in the given datastream.
  */
-function islandora_markup_editor_add_tei_processing_instruction(AbstractObject $object, $schema, $dsid = 'OBJ') {
+function islandora_markup_editor_add_tei_processing_instruction(AbstractObject $object, $schema = "", $dsid = 'OBJ') {
   if ($schema == "") {
-    $markup_editor_module_path = drupal_get_path('module', 'islandora_markup_editor');
-    // Use the CWRC-TEIBasic.rng provided with the cwrc-writer by default.
-    $schema = file_create_url("$markup_editor_module_path/CWRC-Writer/src/schema/CWRC-TEIBasic.rng");
+    // Use the default schema if none is supplied.
+    $schema = islandora_markup_editor_create_schema_rels_url($object);
   }
   $xml_data = $object[$dsid]->content;
   $instructions = array(
@@ -176,4 +175,45 @@ function islandora_markup_editor_add_tei_processing_instruction(AbstractObject $
   $object[$dsid]->setContentFromString($data);
 
   return $trimmed;
+}
+
+/**
+ * Add a relationship to an object of the supplied TEI schema.
+ *
+ * @param AbstractObject $object
+ *   The islandora object to add the schema relation to.
+ * @param string $schema_pid
+ *   The schema pid to add as a relation. Defaults to
+ *   'islandora:tei_sample_schema'.
+ *
+ * @return mixed
+ *   RELS.
+ */
+function islandora_markup_editor_process_schema_relationship(AbstractObject $object, $schema_pid = 'islandora:tei_sample_schema') {
+  // Check if the object has a 'hasTEISchema' relationship.
+  $rels = $object->relationships->get(ISLANDORA_RELS_EXT_URI, 'hasTEISchema');
+  if (!$rels) {
+    // Rels does not exist, add the default schema.
+    $object->relationships->add(ISLANDORA_RELS_EXT_URI, 'hasTEISchema', $schema_pid);
+    $rels = $object->relationships->get(ISLANDORA_RELS_EXT_URI, 'hasTEISchema');
+  }
+  dsm($rels, "islandora_markup_editor_process_schema_relationship");
+  return $rels;
+}
+
+/**
+ * Creates a URL for the given objects RELS-EXT 'hasTEISchema' entry.
+ *
+ * @param AbstractObject $object
+ *   A fedora object to process sechema rels as url.
+ */
+function islandora_markup_editor_create_schema_rels_url(AbstractObject $object) {
+  $markup_editor_module_path = drupal_get_path('module', 'islandora_markup_editor');
+
+  $rel = islandora_markup_editor_process_schema_relationship($object);
+  $rel_pid = $rel[0]['object']['value'];
+  $schema = islandora_object_load($rel_pid);
+  $rdf_datastream = $schema['RDF-SCHEMA'];
+
+  return url("islandora/object/$rel_pid/datastream/RDF-SCHEMA/view/$rdf_datastream->label");
 }
