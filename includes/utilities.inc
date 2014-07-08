@@ -197,7 +197,6 @@ function islandora_markup_editor_process_schema_relationship(AbstractObject $obj
     $object->relationships->add(ISLANDORA_RELS_EXT_URI, 'hasTEISchema', $schema_pid);
     $rels = $object->relationships->get(ISLANDORA_RELS_EXT_URI, 'hasTEISchema');
   }
-  dsm($rels, "islandora_markup_editor_process_schema_relationship");
   return $rels;
 }
 
@@ -208,12 +207,9 @@ function islandora_markup_editor_process_schema_relationship(AbstractObject $obj
  *   A fedora object to process sechema rels as url.
  */
 function islandora_markup_editor_create_schema_rels_url(AbstractObject $object) {
-  $markup_editor_module_path = drupal_get_path('module', 'islandora_markup_editor');
-
   $rel = islandora_markup_editor_process_schema_relationship($object);
   $rel_pid = $rel[0]['object']['value'];
   $schema = islandora_object_load($rel_pid);
   $rdf_datastream = $schema['RDF-SCHEMA'];
-
   return url("islandora/object/$rel_pid/datastream/RDF-SCHEMA/view/$rdf_datastream->label");
 }

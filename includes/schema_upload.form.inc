@@ -20,7 +20,7 @@ function islandora_markup_editor_schema_upload_form(array $form, array &$form_st
   $upload_size = min((int) ini_get('post_max_size'), (int) ini_get('upload_max_filesize'));
   $rng_extensions = array('rng');
   $css_extensions = array('css');
-  $xslt_extensions = array('xsl', 'xslt');
+  $xslt_extensions = array("xsl xslt");
   $form = array();
   $form['rng_file'] = array(
     '#title' => t('RNG File'),
