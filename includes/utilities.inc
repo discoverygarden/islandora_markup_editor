@@ -16,19 +16,15 @@
  *   An indexed array of processing instuctions, or FALSE if not found.
  */
 function islandora_markup_editor_fetch_tei_processing_instruction(AbstractObject $object, $dsid = 'OBJ') {
-
   if (!isset($object[$dsid])) {
     return FALSE;
   }
-
   $result = islandora_markup_editor_query_for_processing_instruction($object[$dsid]->content);
-
-  if (!$result->length == 0) {
+  if ($result->length == 0) {
     // No processing instruction, add the default.
     islandora_markup_editor_add_tei_processing_instruction($object, "", $dsid);
     $result = islandora_markup_editor_query_for_processing_instruction($object[$dsid]->content);
   }
-
   // Format the output for convience.
   $arr = explode(" ", $result->item(0)->data);
   $return = array();
