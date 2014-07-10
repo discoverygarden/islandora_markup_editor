@@ -26,7 +26,6 @@ return function(writer) {
 		currentData.type = $('#'+id+'_type input:checked').val();
 		currentData.role = $('#'+id+'_role select').val();
 		currentData.attributes = attributeWidget.getData();
-		
 		for (var key in currentData) {
 			if (currentData[key] == undefined || currentData[key] == '') {
 				delete currentData[key];
@@ -43,6 +42,8 @@ return function(writer) {
 		} else {
 			w.tagger.finalizeEntity('person', currentData);
 		}
+		console.log("current data");
+		console.log(currentData);
 		currentId = null;
 		currentData = null;
 	};
@@ -184,7 +185,8 @@ return function(writer) {
 			// TODO how to handle ADD/EDIT with cwrcInfo
 			
 			currentData = {};
-			
+			console.log("config object");
+			console.log(config)
 			if (config.cwrcInfo != null) {
 				$('#'+id+'_tagAs span').html(config.cwrcInfo.name);
 				currentData.cwrcInfo = config.cwrcInfo;
