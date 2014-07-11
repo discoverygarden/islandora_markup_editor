@@ -302,18 +302,12 @@ return function(writer) {
 	
 	tagger.finalizeEntity = function(type, info) {
 		w.editor.selection.moveToBookmark(w.editor.currentBookmark);
-		console.log("finalize entity");
-		console.log(info);
 		if (info != null) {
 			// add attributes to tag
 //			var startTag = w.editor.$('[name='+id+'][class~=start]');
 //			for (var key in info) {
 //				startTag.attr(key, w.utilities.escapeHTMLString(info[key]));
 //			}
-			console.log("TYPE::::::");
-			console.log(type);
-			console.log("INFO::::::");
-			console.log(type);
 			var id = tagger.addEntityTag(type);
 			w.entities[id].info = info;
 			

@@ -42,8 +42,6 @@ return function(writer) {
 		} else {
 			w.tagger.finalizeEntity('person', currentData);
 		}
-		console.log("current data");
-		console.log(currentData);
 		currentId = null;
 		currentData = null;
 	};
@@ -185,8 +183,6 @@ return function(writer) {
 			// TODO how to handle ADD/EDIT with cwrcInfo
 			
 			currentData = {};
-			console.log("config object");
-			console.log(config)
 			if (config.cwrcInfo != null) {
 				$('#'+id+'_tagAs span').html(config.cwrcInfo.name);
 				currentData.cwrcInfo = config.cwrcInfo;
