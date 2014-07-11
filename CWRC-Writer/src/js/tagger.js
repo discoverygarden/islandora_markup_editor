@@ -308,7 +308,6 @@ return function(writer) {
 //			for (var key in info) {
 //				startTag.attr(key, w.utilities.escapeHTMLString(info[key]));
 //			}
-			
 			var id = tagger.addEntityTag(type);
 			w.entities[id].info = info;
 			

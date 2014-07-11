@@ -30,12 +30,11 @@ body {
 	border-radius: 5px;
 }
 
-/* TODO: need to get this out of here!! */
-#entityHighlight.txtimglnk {
-    background-color: #7F00FF;
+#entityHighlight.textimagelink {
+    background-color: #90B57D;
 }
-.showEntityBrackets .txtimglnk {
-    border-color: #7F00FF;
+.showEntityBrackets .textimagelink {
+    border-color: #90B57D;
 }
 
 #entityHighlight.person {

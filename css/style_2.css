@@ -104,6 +104,21 @@
     margin-right: 2px;
     width: 22px;
 }
+
+
+.entitiesList .textimagelink .box {
+    background-image: url("../CWRC-Writer/src/img/textimage.png");
+}
+.entitiesList .textimagelink .box, .entitiesList .textimagelink.over {
+    background-color: #90B57D;
+}
+.entitiesList .textimagelink.selected, .entitiesList .textimagelink.selected .box {
+    background-color: #90B57D;
+}
+
+
+
+
 .entitiesList .person .box {
     background-image: url("../CWRC-Writer/src/img/user.png");
 }
