@@ -63,6 +63,7 @@ function islandora_markup_editor_islandora_required_objects(IslandoraTuque $conn
   $datastream->mimetype = 'image/png';
   $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
   $markup_editor_collection->ingestDatastream($datastream);
+
   return array(
     'islandora_markup_editor' => array(
       'title' => 'Islandora markup editor',
