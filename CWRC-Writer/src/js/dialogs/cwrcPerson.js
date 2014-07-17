@@ -7,6 +7,7 @@ return function(writer) {
 	cD.setPersonSchema('js/cwrcDialogs/schemas/entities.rng');
 	
 	function createNewPerson(data) {
+		console.log(data);
 		cD.popCreatePerson({
 			success: function(result) {
 				if (result.data == null) {
@@ -33,6 +34,7 @@ return function(writer) {
 	
 	return {
 		show: function(config) {
+			
 			if (config.entry) {
 				w.dialogManager.show('tagPerson', {
 					entry: config.entry
@@ -40,7 +42,7 @@ return function(writer) {
 			} else {
 				var query = w.editor.currentBookmark.rng.toString();
 				$('#searchEntityInput').val(query);
-				
+				console.log(query)
 				cD.popSearchPerson({
 					success: function(result) {
 						if (result.id == null) {

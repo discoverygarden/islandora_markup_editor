@@ -19,7 +19,11 @@ return function(writer) {
 		    '<label for="search_query">Search</label>'+
 		    '<input type="text" name="query" id="search_query" />'+
 	    '</div>'+
-	    '<div style="position: absolute; top: 55px; left: 10px; right: 10px; bottom: 70px;">'+
+	    '<div id="search_describeAs" style="position: absolute; top: 58px; left: 10px; right: 10px; height: 31px;">'+
+	    	'<label for="search_describeAs">Description</label>'+
+			'<input type="textarea" style="resize:none;" value="' + "" +'"></input>'+
+		'</div>'+
+	    '<div style="position: absolute; top: 110px; left: 10px; right: 10px; bottom: 70px;">'+
 		    '<div id="lookupServices">'+
 		    	'<div id="lookup_project">'+
 			    '<h3>Results from '+projectTitle+' Project</h3>'+
@@ -39,7 +43,7 @@ return function(writer) {
 			    '</div>'+
 		    '</div>'+
 	    '</div>'+
-	    '<div id="certainty" style="position: absolute; bottom: 0; left: 10px; right: 10px; height: 65px;">'+
+	    '<div id="certainty" style="position: absolute; top: 330px; bottom: 0; left: 10px; right: 10px; height: 65px;">'+
 	    	'<p>This identification is:</p>'+
 			'<input type="radio" id="c_definite" name="search_certainty" value="definite" /><label for="c_definite">Definite</label>'+
 			'<input type="radio" id="c_reasonable" name="search_certainty" value="reasonable" /><label for="c_reasonable">Reasonably Certain</label>'+
@@ -189,6 +193,10 @@ return function(writer) {
 				}
 			}
 			if (data) data.certainty = $('#certainty input:checked').val();
+		}
+		var description_val = $('#search_describeAs input').attr('value');
+		if (data != null) {
+			data.description = description_val;
 		}
 		if (mode == EDIT && data != null) {
 			w.tagger.editEntity(currentId, data);
