@@ -5,15 +5,7 @@
  */
 
 /**
- * Prepares variables for the markup editor.
- *
- * Default template: islandora-markup-editor.tpl.php
- *
- * @param array $variables
- *   An associative array containing:
- *   - element: Associative array, with properties of the element.
- *   Properties used: #custom_js, #islandora_object.
- *
+ * Implements hook_preprocess().
  */
 function islandora_markup_editor_preprocess_islandora_markup_editor(&$variables) {
   module_load_include('inc', 'islandora_markup_editor', 'includes/utilities');
