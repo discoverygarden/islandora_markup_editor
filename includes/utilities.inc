@@ -207,9 +207,15 @@ function islandora_markup_editor_process_schema_relationship(AbstractObject $obj
  *   A fedora object to process sechema rels as url.
  */
 function islandora_markup_editor_create_schema_rels_url(AbstractObject $object) {
+  global $base_url;
+  $module_path = drupal_get_path('module', 'islandora_markup_editor');
   $rel = islandora_markup_editor_process_schema_relationship($object);
   $rel_pid = $rel[0]['object']['value'];
   $schema = islandora_object_load($rel_pid);
   $rdf_datastream = $schema['RDF-SCHEMA'];
-  return url("islandora/object/$rel_pid/datastream/RDF-SCHEMA/view/$rdf_datastream->label");
+  dsm($rdf_datastream, "rdf datastream");
+  // url() function wont suffice for the CWRC-Writer.
+  $url = $base_url . "/islandora/object/$rel_pid/datastream/RDF-SCHEMA/view/$rdf_datastream->label";
+  dsm($url, "url");
+  return $url;
 }
