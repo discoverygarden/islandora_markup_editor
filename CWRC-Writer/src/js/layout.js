@@ -6,14 +6,11 @@ function setupLayoutAndModules(w, EntitiesList, Relations, Selection, StructureT
 			resizable: true,
 			slidable: false
 		},
-	//			east: {
-	//				onresize: function() {
-	//					// TODO: Move this out of the editor somehow.
-	//					// Accessing 'writer.layout.east.onresize does no
-	//					// work.
-	//					resizeCanvas();
-	//				},
-	//			},
+		east: {
+			onresize: function() {
+				resizeCanvas();
+			},
+		},
 		north: {
 			size: 35,
 			minSize: 35,

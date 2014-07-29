@@ -63,8 +63,7 @@ function islandora_markup_editor_islandora_required_objects(IslandoraTuque $conn
   $datastream->mimetype = 'image/png';
   $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
   $markup_editor_collection->ingestDatastream($datastream);
-
-    // RDF Schema Content Model.
+  // RDF Schema Content Model.
   $markup_editor_schema_content_model = $connection->repository->constructObject('islandora:markupeditorschemaCModel');
   $markup_editor_schema_content_model->owner = 'fedoraAdmin';
   $markup_editor_schema_content_model->label = 'Schema Content Model';
@@ -95,12 +94,14 @@ function islandora_markup_editor_islandora_required_objects(IslandoraTuque $conn
   $sample_schema->models = 'islandora:criticaleditionschemaCModel';
   $sample_schema->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', 'islandora:tei_schema_collection');
 
+  // Add the RDF (schema) datastream.
   $new_ds = $sample_schema->constructDatastream('RDF-SCHEMA', 'M');
   $new_ds->label = 'RDF-SCHEMA';
   $new_ds->mimetype = 'application/rdf+xml';
   $new_ds->setContentFromFile("$module_path/CWRC-Writer/src/schema/CWRC-TEIBasic.rng", FALSE);
   $sample_schema->ingestDatastream($new_ds);
 
+  // Add the TEI (RDF) CSS datastream.
   $new_ds_css = $sample_schema->constructDatastream('RDF-CSS', 'M');
   $new_ds_css->label = 'RDF-CSS';
   $new_ds_css->mimetype = 'text/css';

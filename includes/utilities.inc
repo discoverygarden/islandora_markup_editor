@@ -16,19 +16,15 @@
  *   An indexed array of processing instuctions, or FALSE if not found.
  */
 function islandora_markup_editor_fetch_tei_processing_instruction(AbstractObject $object, $dsid = 'OBJ') {
-
   if (!isset($object[$dsid])) {
     return FALSE;
   }
-
   $result = islandora_markup_editor_query_for_processing_instruction($object[$dsid]->content);
-
   if ($result->length == 0) {
     // No processing instruction, add the default.
     islandora_markup_editor_add_tei_processing_instruction($object, "", $dsid);
     $result = islandora_markup_editor_query_for_processing_instruction($object[$dsid]->content);
   }
-
   // Format the output for convience.
   $arr = explode(" ", $result->item(0)->data);
   $return = array();
@@ -55,8 +51,8 @@ function islandora_markup_editor_add_markup_editor_drupal_settings($variables) {
   // Construct our custom settings.
   $islandora_markup_editor_module_path = drupal_get_path('module', 'islandora_markup_editor');
   $view = islandora_object_access_callback(ISLANDORA_VIEW_OBJECTS, $variables['islandora_object']);
-  $view_edit = islandora_object_access_callback(ISLANDORA_CRITICAL_EDITION_EDIT_WITH_CWRC_WRITER, $variables['islandora_object']);
-  $validate_path = variable_get('islandora_critical_edition_validate_url', '/validator/validate.html');
+  $view_edit = islandora_object_access_callback('ISLANDORA_CRITICAL_EDITION_EDIT_WITH_CWRC_WRITER', $variables['islandora_object']);
+  $validate_path = variable_get('islandora_markup_editor_validate_url', '/validator/validate.html');
   $doc_process_instructions = islandora_markup_editor_fetch_tei_processing_instruction($variables['islandora_object']);
 
   // This is silly. We need to override the default tei schema with our own.

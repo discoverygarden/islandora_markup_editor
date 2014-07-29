@@ -33,6 +33,7 @@ return function(writer) {
 	
 	return {
 		show: function(config) {
+			
 			if (config.entry) {
 				w.dialogManager.show('tagPerson', {
 					entry: config.entry
@@ -40,7 +41,6 @@ return function(writer) {
 			} else {
 				var query = w.editor.currentBookmark.rng.toString();
 				$('#searchEntityInput').val(query);
-				
 				cD.popSearchPerson({
 					success: function(result) {
 						if (result.id == null) {
