@@ -209,9 +209,7 @@ function islandora_markup_editor_create_schema_rels_url(AbstractObject $object) 
   $rel_pid = $rel[0]['object']['value'];
   $schema = islandora_object_load($rel_pid);
   $rdf_datastream = $schema['RDF-SCHEMA'];
-  dsm($rdf_datastream, "rdf datastream");
   // url() function wont suffice for the CWRC-Writer.
   $url = $base_url . "/islandora/object/$rel_pid/datastream/RDF-SCHEMA/view/$rdf_datastream->label";
-  dsm($url, "url");
   return $url;
 }
