@@ -91,13 +91,13 @@ function islandora_markup_editor_islandora_required_objects(IslandoraTuque $conn
   $sample_schema = $connection->repository->constructObject('islandora:tei_sample_schema');
   $sample_schema->owner = 'fedoraAdmin';
   $sample_schema->label = 'CWRC_EMiC_TEI_Schema';
-  $sample_schema->models = 'islandora:criticaleditionschemaCModel';
+  $sample_schema->models = 'islandora:markupeditorschemaCModel';
   $sample_schema->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', 'islandora:tei_schema_collection');
 
   // Add the RDF (schema) datastream.
   $new_ds = $sample_schema->constructDatastream('RDF-SCHEMA', 'M');
   $new_ds->label = 'RDF-SCHEMA';
-  $new_ds->mimetype = 'application/rdf+xml';
+  $new_ds->mimetype = 'application/xml';
   $new_ds->setContentFromFile("$module_path/CWRC-Writer/src/schema/CWRC-TEIBasic.rng", FALSE);
   $sample_schema->ingestDatastream($new_ds);
 
@@ -150,7 +150,7 @@ function islandora_markup_editor_islandora_content_model_forms_form_associations
       'transform' => 'mods_to_dc.xsl',
       'template' => FALSE,
     ),
-    'islandora_critical_edition_schema_mods_form' => array(
+    'islandora_markup_editor_schema_form_mods' => array(
       'content_model' => 'islandora:markupeditorschemaCModel',
       'form_name' => 'Schema MODS form',
       'dsid' => 'MODS',
@@ -234,8 +234,8 @@ function islandora_markup_editor_islandora_markupeditorschemaCModel_islandora_in
     'islandora_schema_upload' => array(
       'weight' => 10,
       'type' => 'form',
-      'form_id' => 'islandora_critical_edition_schema_upload_form',
-      'module' => 'islandora_critical_edition',
+      'form_id' => 'islandora_markup_editor_schema_upload_form',
+      'module' => 'islandora_markup_editor',
       'file' => 'includes/schema_upload.form.inc',
     ),
   );
