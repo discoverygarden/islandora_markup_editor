@@ -23,8 +23,8 @@ function islandora_markup_editor_menu() {
     'page arguments' => array(3),
     'type' => MENU_CALLBACK,
     'file' => 'includes/callbacks.inc',
-    'access callback' => 'islandora_object_access_callback',
-    'access arguments' => array(ISLANDORA_CRITICAL_EDITION_EDIT_WITH_CWRC_WRITER, 3),
+    'access callback' => 'islandora_markup_editor_save_tei_access',
+    'access arguments' => array(3),
   );
   return $items;
 }
@@ -140,7 +140,7 @@ function islandora_markup_editor_islandora_xml_form_builder_forms() {
 /**
  * Implements hook_islandora_content_model_forms_form_associations().
  */
-function islandora_markup_editor_islandora_content_model_forms_form_associations() {
+function islandora_markup_editor_islandora_islandora_xml_form_builder_form_associations() {
   return array(
     'islandora_markup_editor_mods_form' => array(
       'content_model' => 'islandora:markupEditorCModel',
@@ -239,4 +239,20 @@ function islandora_markup_editor_islandora_markupeditorschemaCModel_islandora_in
       'file' => 'includes/schema_upload.form.inc',
     ),
   );
+}
+
+/**
+ * Helper function to see if the user can save data.
+ *
+ * @param AbstractObject $object
+ *   An AbstractObject representing an object within Fedora.
+ *
+ * @return bool
+ *   TRUE if the user has access, FALSE otherwise.
+ */
+function islandora_markup_editor_save_tei_access(AbstractObject $object) {
+  if (!isset($object['OBJ'])) {
+    return FALSE;
+  }
+  return islandora_datastream_access(ISLANDORA_METADATA_EDIT, $object['OBJ']);
 }
