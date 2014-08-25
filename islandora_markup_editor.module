@@ -225,7 +225,6 @@ function islandora_markup_editor_islandora_markupEditorCModel_islandora_ingest_s
     ),
   );
 }
-
 /**
  * Implements hook_islandora_ingest_steps().
  */
