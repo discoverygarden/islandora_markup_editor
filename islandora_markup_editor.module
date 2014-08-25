@@ -24,7 +24,7 @@ function islandora_markup_editor_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'includes/callbacks.inc',
     'access callback' => 'islandora_object_access_callback',
-    'access arguments' => array(ISLANDORA_CRITICAL_EDITION_EDIT_WITH_CWRC_WRITER, 3),
+    'access arguments' => array(ISLANDORA_VIEW_OBJECTS, 3),
   );
   return $items;
 }
@@ -225,7 +225,6 @@ function islandora_markup_editor_islandora_markupEditorCModel_islandora_ingest_s
     ),
   );
 }
-
 /**
  * Implements hook_islandora_ingest_steps().
  */
@@ -234,8 +233,8 @@ function islandora_markup_editor_islandora_markupeditorschemaCModel_islandora_in
     'islandora_schema_upload' => array(
       'weight' => 10,
       'type' => 'form',
-      'form_id' => 'islandora_critical_edition_schema_upload_form',
-      'module' => 'islandora_critical_edition',
+      'form_id' => 'islandora_markup_editor_schema_upload_form',
+      'module' => 'islandora_markup_editor',
       'file' => 'includes/schema_upload.form.inc',
     ),
   );
